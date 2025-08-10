@@ -164,32 +164,32 @@ const AdminUpload = ({ isOpen, onClose }) => {
     setEditingProduct(null);
   };
 
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-    setMode('edit');
-    setFormData({
-      name: product.name,
-      price: product.price.toString(),
-      originalPrice: product.originalPrice?.toString() || '',
-      images: product.images || [],
-      description: product.description,
-      longDescription: product.longDescription || '',
-      category: product.category,
-      collection: product.collection,
-      scent: product.scent,
-      burnTime: product.burnTime,
-      size: product.size,
-      weight: product.weight,
-      inStock: product.inStock,
-      featured: product.featured,
-      ingredients: product.ingredients || ['Soy Wax'],
-      careInstructions: product.careInstructions || {
-        firstBurn: '',
-        trimWick: '',
-        safety: ''
-      }
-    });
-  };
+  // const handleEdit = (product) => {
+  //   setEditingProduct(product);
+  //   setMode('edit');
+  //   setFormData({
+  //     name: product.name,
+  //     price: product.price.toString(),
+  //     originalPrice: product.originalPrice?.toString() || '',
+  //     images: product.images || [],
+  //     description: product.description,
+  //     longDescription: product.longDescription || '',
+  //     category: product.category,
+  //     collection: product.collection,
+  //     scent: product.scent,
+  //     burnTime: product.burnTime,
+  //     size: product.size,
+  //     weight: product.weight,
+  //     inStock: product.inStock,
+  //     featured: product.featured,
+  //     ingredients: product.ingredients || ['Soy Wax'],
+  //     careInstructions: product.careInstructions || {
+  //       firstBurn: '',
+  //       trimWick: '',
+  //       safety: ''
+  //     }
+  //   });
+  // };
 
   const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Heart, Check, Eye, Edit } from 'lucide-react';
+import { ShoppingBag, Heart, Check, Eye, Trash2,Edit } from 'lucide-react';
 // import { useCart } from '../hooks/useCart';
 // import { useAuth } from '../hooks/useAuth';
 import ProductEditModal from './ProductEditModal';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 
 const ProductCard = ({ product, onUpdate }) => {
+
+    const {   deleteProduct  } = useProducts();
   const { addToCart } = useCart();
   const { user } = useAuth();
   const [isAdded, setIsAdded] = useState(false);
@@ -27,6 +30,11 @@ const ProductCard = ({ product, onUpdate }) => {
     e.preventDefault();
     e.stopPropagation();
     setShowEditModal(true);
+  };
+    const handleDelete = async (productId) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      await deleteProduct(productId);
+    }
   };
 
   const canEdit = user && ['admin', 'seller', 'owner'].includes(user.role);
@@ -118,13 +126,13 @@ const ProductCard = ({ product, onUpdate }) => {
                   )}
                 </motion.button>
                 
-                <motion.button
+                {/* <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-white text-gray-700 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <Heart className="h-4 w-4" />
-                </motion.button>
+                </motion.button> */}
               </motion.div>
             )}
           </AnimatePresence>
@@ -133,7 +141,8 @@ const ProductCard = ({ product, onUpdate }) => {
           <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 opacity-100 sm:opacity-0 ">
             <div className="flex space-x-2">
               {canEdit && (
-                <motion.button
+               <>
+               <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleEdit}
@@ -141,6 +150,13 @@ const ProductCard = ({ product, onUpdate }) => {
                 >
                   <Edit className="h-4 w-4" />
                 </motion.button>
+                 <button
+                          onClick={() => handleDelete(product._id)}
+                          className="text-red-600 hover:text-red-800 p-1"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                        </>
               )}
               <motion.button
                 whileHover={{ scale: 1.1 }}

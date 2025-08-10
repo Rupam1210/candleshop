@@ -71,7 +71,7 @@ const Cart = ({ isOpen, onClose }) => {
                       
                       <div className="flex items-center mt-2">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item._id, item.quantity - 1)}
                           className="text-gray-400 hover:text-gray-600 p-1"
                         >
                           <Minus className="h-4 w-4" />
@@ -80,7 +80,7 @@ const Cart = ({ isOpen, onClose }) => {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
                           className="text-gray-400 hover:text-gray-600 p-1"
                         >
                           <Plus className="h-4 w-4" />
@@ -92,7 +92,7 @@ const Cart = ({ isOpen, onClose }) => {
                         ₹{(item.price * item.quantity).toFixed(2)}
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item._id)}
                         className="text-xs text-red-500 hover:text-red-700 mt-1"
                       >
                         Remove

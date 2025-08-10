@@ -196,7 +196,7 @@ const Hero = () => {
                     transition={{ duration: 2, repeat: Infinity }}
                     className="w-3 h-3 bg-green-500 rounded-full"
                   />
-                  <span className="text-sm font-medium text-gray-700">Free shipping on orders $50+</span>
+                  <span className="text-sm font-medium text-gray-700">Free shipping on orders ₹ 100+</span>
                 </div>
               </motion.div>
               
