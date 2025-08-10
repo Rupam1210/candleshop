@@ -36,7 +36,7 @@ const Newsletter = () => {
             Plus, get 15% off your first order!
           </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-6">
+          {/* <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-6">
             <input
               type="email"
               value={email}
@@ -60,7 +60,7 @@ const Newsletter = () => {
                 </>
               )}
             </button>
-          </form>
+          </form> */}
 
           {isSubmitted && (
             <div className="bg-green-600 text-white px-6 py-3 rounded-lg inline-block mb-4">

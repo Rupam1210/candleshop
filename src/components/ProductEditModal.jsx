@@ -123,12 +123,13 @@ const ProductEditModal = memo(({ isOpen, onClose, product, onUpdate }) => {
       onUpdate(response.data.product);
       onClose();
     } catch (error) {
+      console.log(error)
       showError(error.response?.data?.message || 'Failed to update product');
     } finally {
       setLoading(false);
     }
   };
-  console.log(formData)
+  // console.log(formData)
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">

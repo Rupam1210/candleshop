@@ -57,7 +57,7 @@ const About = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Illuminating Lives Since 2020</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Illuminating Lives Since 2024</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
                   What started as a small passion project in our kitchen has grown into a beloved brand 

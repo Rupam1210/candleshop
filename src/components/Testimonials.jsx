@@ -3,35 +3,36 @@ import { Star, Quote } from 'lucide-react';
 
 const Testimonials = () => {
   const testimonials = [
-    {
-      name: 'Sarah Johnson',
-      rating: 5,
-      comment: 'Absolutely love these candles! The scents are incredible and they burn so evenly. The Midnight Rose is my favorite - it fills my entire living room with the most beautiful fragrance.',
-      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150',
-      location: 'New York, NY'
-    },
-    {
-      name: 'Michael Chen',
-      rating: 5,
-      comment: 'Best candles I\'ve ever purchased. The quality is outstanding and the packaging is beautiful. Perfect for gifts! I\'ve ordered multiple times and they never disappoint.',
-      image: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=150',
-      location: 'San Francisco, CA'
-    },
-    {
-      name: 'Emily Rodriguez',
-      rating: 5,
-      comment: 'These candles have transformed my home. The burn time is amazing and the scents are so sophisticated and calming. I love how they make every room feel like a spa.',
-      image: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150',
-      location: 'Austin, TX'
-    },
-    {
-      name: 'David Kim',
-      rating: 5,
-      comment: 'The customer service is exceptional and the candles are even better in person. Fast shipping and beautiful presentation. Highly recommend to anyone looking for luxury candles.',
-      image: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150',
-      location: 'Seattle, WA'
-    }
-  ];
+  {
+    name: 'Aarav Mehta',
+    rating: 5,
+    comment: 'Absolutely love these candles! The fragrances are divine and they burn so evenly. The Midnight Rose is my favourite – it fills my entire living room with the most beautiful aroma.',
+    image: "https://cdn-icons-png.flaticon.com/512/847/847969.png"  ,
+    location: 'Mumbai, Maharashtra'
+  },
+  {
+    name: 'Priya Sharma',
+    rating: 5,
+    comment: 'These are the best candles I’ve ever bought. The quality is superb and the packaging is so elegant. Makes for a perfect gift! I’ve ordered multiple times and they never disappoint.',
+    image: "https://cdn-icons-png.flaticon.com/512/847/847969.png" ,
+    location: 'Delhi, India'
+  },
+  {
+    name: 'Rohan Iyer',
+    rating: 5,
+    comment: 'These candles have completely transformed my home. The burn time is amazing and the fragrances are so calming. Every room now feels like a spa.',
+    image:"https://cdn-icons-png.flaticon.com/512/847/847969.png"  ,
+    location: 'Bengaluru, Karnataka'
+  },
+  {
+    name: 'Neha Kapoor',
+    rating: 5,
+    comment: 'The customer service is fantastic and the candles look even better in person. Fast delivery and beautiful presentation. Highly recommended for anyone looking for luxury candles.',
+    image: "https://cdn-icons-png.flaticon.com/512/847/847969.png"  ,
+    location: 'Jaipur, Rajasthan'
+  }
+];
+
 
   return (
     <section className="py-16 bg-rose-50">

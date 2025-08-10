@@ -13,7 +13,7 @@ const Products = memo(() => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
@@ -221,13 +221,13 @@ const Products = memo(() => {
                 <input
                   type="range"
                   min="0"
-                  max="100"
+                  max="10000"
                   value={priceRange[1]}
                   onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                   className="flex-1"
                 />
                 <span className="text-sm text-gray-600 min-w-[80px]">
-                  ${priceRange[0]} - ${priceRange[1]}
+                  ₹{priceRange[0]} - ₹{priceRange[1]}
                 </span>
               </div>
             </div>

@@ -50,7 +50,7 @@ const Collections = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {collections.map((collection, index) => {
-            const productCount = getProductsByCollection(collection.slug).length;
+            const productCount = getProductsByCollection(collection._id).length;
             
             return (
               <motion.div

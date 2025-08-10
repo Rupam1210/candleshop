@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-rose-400">LuxeCandle</h3>
+            <h3 className="text-2xl font-bold text-rose-400">FragratingFlare</h3>
             <p className="text-gray-300 leading-relaxed">
               Crafting premium candles that illuminate your most precious moments with luxury and elegance since 2020.
             </p>

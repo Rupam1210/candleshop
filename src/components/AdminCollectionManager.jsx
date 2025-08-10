@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Edit, Trash2, Save, X as Cancel } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import ImageUpload from './ImageUpload';
 
 const AdminCollectionManager = ({ isOpen, onClose }) => {
+  const modalRef = useRef();
+
   const { collections, addCollection, updateCollection, deleteCollection } = useProducts();
   const { user } = useAuth();
   const [editingCollection, setEditingCollection] = useState(null);
@@ -87,6 +89,7 @@ const handleInputChange = (e) => {
         resetForm();
         setShowAddForm(false);
         setEditingCollection(null);
+        window.location.reload();
       } else {
         setErrors({ submit: result.error });
       }
@@ -96,6 +99,12 @@ const handleInputChange = (e) => {
   };
 
   const handleEdit = (collection) => {
+   if (modalRef.current) {
+      modalRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
     setEditingCollection(collection);
     setFormData({
       name: collection.name,
@@ -263,6 +272,7 @@ const handleInputChange = (e) => {
                   key={collection._id || collection.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  ref={modalRef} 
                   className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="aspect-video relative">
@@ -276,6 +286,7 @@ const handleInputChange = (e) => {
                     />
                     <div className="absolute top-2 right-2 flex space-x-2">
                       <button
+
                         onClick={() => handleEdit(collection)}
                         className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
                       >
