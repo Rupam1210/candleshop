@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { X, Save, Plus, Trash2 } from 'lucide-react';
-import { productsAPI } from '../services/api';
+import { collectionsAPI, productsAPI } from '../services/api';
 import { showSuccess, showError } from '../utils/toast';
 import ImageUpload from './ImageUpload';
 
@@ -44,6 +44,17 @@ const ProductEditModal = memo(({ isOpen, onClose, product, onUpdate }) => {
     }
   };
 
+  // loaddinggg
+//  const loadCollections = async () => {
+//      try {
+//        const response = await collectionsAPI.getAll();
+//        setCollections(response.data.collections);
+//      } catch (error) {
+//        showError('Failed to load collections');
+//      } finally {
+//        setLoading(false);
+//      }
+//    };
   const handleCareInstructionChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -120,11 +131,15 @@ const ProductEditModal = memo(({ isOpen, onClose, product, onUpdate }) => {
 
       const response = await productsAPI.update(product._id, cleanedData);
       showSuccess('Product updated successfully!');
-      onUpdate(response.data.product);
+       if (typeof onUpdate === "function") {
+      onUpdate(response.data.product); // safe call
+    }
+      window.location.reload();
       onClose();
     } catch (error) {
       console.log(error)
       showError(error.response?.data?.message || 'Failed to update product');
+       onClose();
     } finally {
       setLoading(false);
     }
