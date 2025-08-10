@@ -34,6 +34,7 @@ const ProductCard = ({ product, onUpdate }) => {
     const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       await deleteProduct(productId);
+      window.location.reload();
     }
   };
 
