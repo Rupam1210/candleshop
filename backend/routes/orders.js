@@ -5,7 +5,7 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 const { admin } = require('../middleware/auth');
 
-const router = express.Router();
+const router = express.Router(); 
 
 // @desc    Create new order
 // @route   POST /api/orders
