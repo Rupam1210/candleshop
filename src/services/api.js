@@ -88,9 +88,13 @@ export const productsAPI = {
   getAll: async (params = {}) => {
     return await api.get('/products', { params });
   },
+  // /collections/:id
 
   getById: async (id) => {
     return await api.get(`/products/${id}`);
+  },
+  getByCollectionId: async (id) => {
+    return await api.get(`/products/collections/${id}`);
   },
 
   create: async (productData) => {

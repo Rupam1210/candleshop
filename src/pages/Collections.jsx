@@ -5,9 +5,9 @@ import { ArrowRight } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 
 const Collections = () => {
-  const { collections, getProductsByCollection } = useProducts();
+  const { collections } = useProducts();
   
-  console.log(collections);
+  // console.log(collections);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -77,12 +77,12 @@ const Collections = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 }}
                     >
-                      <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                      <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
                         {collection.name}
                       </h2>
-                      <p className="text-white/90 mb-6 max-w-2xl text-lg">
+                      {/* <p className="text-white/90 mb-6 max-w-2xl text-lg">
                         {collection.description}
-                      </p>
+                      </p> */}
                       <div className="flex items-center justify-between">
                         <motion.div
                           whileHover={{ scale: 1.05 }}
@@ -90,7 +90,7 @@ const Collections = () => {
                         >
                           <Link
                             to={`/collections/${collection._id}`}
-                            className="inline-flex items-center bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors group"
+                            className="inline-flex items-center bg-white text-gray-900  px-4 py-2 md:px-8 md:py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors group"
                           >
                             Explore Collection
                             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />

@@ -19,16 +19,23 @@ const CollectionDetail = () => {
 
   useEffect(() => {
     const foundCollection = getCollectionBySlug(id);
+    const fetchProducts = async () => {
+    const products = await getProductsByCollection(id);
+    setProducts(products);
+  };
+  fetchProducts();
     // console.log(getProductsByCollection(id));
    
     if (foundCollection) {
       setCollection(foundCollection);
-      setProducts(getProductsByCollection(id));
+      // const data =  getProductsByCollection(id);
+      // console.log(data);
+      // setProducts(data);
       // console.log(collection);
     } else {
       // navigate('/collections');
     }
-  }, [id, getCollectionBySlug, getProductsByCollection, navigate]);
+  }, [id, navigate]);
   
 
   if (!collection) {
@@ -89,7 +96,7 @@ const CollectionDetail = () => {
       {/* Hero Section */}
       <div className="relative h-96 overflow-hidden">
         <img
-          src={collection.image.url}
+          src={collection.image}
           alt={collection.name.alt}
           className="w-full h-full object-cover"
         />

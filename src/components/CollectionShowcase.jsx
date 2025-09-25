@@ -10,7 +10,7 @@ import { useProducts } from '../context/ProductContext';
 const CollectionShowcase = memo(() => {
   // const [collections, setCollections] = useState([]);
   const { collections, loading } = useProducts();
-  console.log(collections);
+  // console.log(collections);
   // const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
@@ -99,7 +99,7 @@ const CollectionShowcase = memo(() => {
                   >
                     {collection.name}
                   </motion.h3>
-                  <motion.p 
+                  {/* <motion.p 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -107,12 +107,12 @@ const CollectionShowcase = memo(() => {
                     className="text-white/90 mb-4 max-w-md"
                   >
                     {collection.description}
-                  </motion.p>
+                  </motion.p> */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.2 }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >

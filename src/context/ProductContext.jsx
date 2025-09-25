@@ -55,9 +55,15 @@ export const ProductProvider = ({ children }) => {
     return allProducts.find(product => product._id === id);
   };
 
-  const getProductsByCollection = (id) => {
+  const getProductsByCollection = async(id) => {
     // console.log(allProducts[0]?.collection._id)
-    return allProducts.filter(product => product?.collection._id === id);
+    try{
+      const response = await productsAPI.getByCollectionId(id);
+      return response.data.products;
+    }catch(error){
+      console.error('Failed to get products by collection:', error);
+      return [];
+    }
   };
 
   const getCollectionBySlug = (id) => {

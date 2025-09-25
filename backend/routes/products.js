@@ -363,5 +363,28 @@ router.get('/featured/list', async (req, res) => {
     });
   }
 });
+router.get('/collections/:id', async (req, res) => {
+  try {
+    const products = await Product.find({ 
+      collection: req.params.id,
+      isActive: true,
+      inStock: true 
+    })
+    .populate('collection', 'name slug')
+    .sort({ createdAt: -1 })
+    .lean();
+
+    res.json({
+      success: true,
+      data: { products }
+    });
+  } catch (error) {
+    console.error('Get collection products error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
 
 module.exports = router;
