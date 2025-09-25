@@ -24,7 +24,7 @@ const ProductDetail = () => {
     if (foundProduct) {
       setProduct(foundProduct);
     } else {
-      // navigate('/products');
+      navigate('/products');
     }
   }, [id, getProductById, navigate]);
 

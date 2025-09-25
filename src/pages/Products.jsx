@@ -5,12 +5,15 @@ import { productsAPI } from '../services/api';
 import { showError } from '../utils/toast';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+import { useProducts } from '../context/ProductContext';
+const Pagination = ({ currentPage, totalPages, onPageChange  }) => {
   const pages = [];
   // console.log(totalPages)
 
+ let count=totalPages;
+//  filter?count= Math.ceil(filter.length/16):count=totalPages;
   // Generate page numbers (you can improve for large number of pages)
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = 1; i <= count; i++) {
     pages.push(i);
   }
 
@@ -75,13 +78,15 @@ const Products = memo(() => {
    const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const {loadProducts}=useProducts();
 
 
   useEffect(() => {
-    loadProducts();
+    loadProduct();
+    loadProducts({page: currentPage, limit: 16});
   }, [currentPage]);
 
-  const loadProducts = async () => {
+  const loadProduct = async () => {
     setLoading(true);
     try {
       const response = await productsAPI.getAll({page: currentPage, limit: 16});
@@ -208,7 +213,7 @@ const Products = memo(() => {
           <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-smflex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 p-4 rounded-lg gap-3">
             <div className="flex items-center space-x-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                {totalProducts} Products
+                {filteredProducts.length} Products
               </h3>
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -341,6 +346,7 @@ const Products = memo(() => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        filter={filteredProducts}
       />
     </motion.div>
   );

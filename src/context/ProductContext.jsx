@@ -50,6 +50,8 @@ export const ProductProvider = ({ children }) => {
     loadCollections();
   }, []);
   const getProductById = (id) => {
+    // console.log(id);
+    // console.log (allProducts);
     return allProducts.find(product => product._id === id);
   };
 

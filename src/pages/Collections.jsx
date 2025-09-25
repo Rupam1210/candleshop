@@ -6,6 +6,8 @@ import { useProducts } from '../context/ProductContext';
 
 const Collections = () => {
   const { collections, getProductsByCollection } = useProducts();
+  
+  console.log(collections);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,7 +52,7 @@ const Collections = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {collections.map((collection, index) => {
-            const productCount = getProductsByCollection(collection._id).length;
+            const productCount = collection.productCount;
             
             return (
               <motion.div
@@ -63,7 +65,7 @@ const Collections = () => {
               >
                 <div className={`aspect-video ${index === 0 ? 'md:aspect-[2.5/1]' : ''} relative`}>
                   <img
-                    src={collection.image.url}
+                    src={collection.image}
                     alt={collection.name.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
