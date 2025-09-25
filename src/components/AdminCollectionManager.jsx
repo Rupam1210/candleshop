@@ -78,7 +78,7 @@ const handleInputChange = (e) => {
 
     try {
       let result;
-      console.log(formData)
+      // console.log(formData)
       if (editingCollection) {
         result = await updateCollection(editingCollection._id, formData);
       } else {

@@ -5,9 +5,66 @@ import { productsAPI } from '../services/api';
 import { showError } from '../utils/toast';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const pages = [];
+  // console.log(totalPages)
+
+  // Generate page numbers (you can improve for large number of pages)
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
+
+  return (
+    <div className="flex justify-center my-8">
+      <nav className="inline-flex space-x-1">
+        {/* Previous Button */}
+        <button
+          onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+          className={`px-3 py-1 rounded-md border ${
+            currentPage === 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Previous
+        </button>
+
+        {/* Page Numbers */}
+        {pages.map((page) => (
+          <button
+            key={page}
+            onClick={() => onPageChange(page)}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === page
+                ? "bg-orange-500 text-white border-orange-500"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+
+        {/* Next Button */}
+        <button
+          onClick={() =>
+            currentPage < totalPages && onPageChange(currentPage + 1)
+          }
+          className={`px-3 py-1 rounded-md border ${
+            currentPage === totalPages
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Next
+        </button>
+      </nav>
+    </div>
+  );
+};
 
 const Products = memo(() => {
   const [products, setProducts] = useState([]);
+   
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
@@ -15,16 +72,23 @@ const Products = memo(() => {
   const [sortBy, setSortBy] = useState('name');
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [viewMode, setViewMode] = useState('grid');
+   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [currentPage]);
 
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const response = await productsAPI.getAll();
+      const response = await productsAPI.getAll({page: currentPage, limit: 16});
+      // console.log(response.data);
       setProducts(response.data.products);
+      setTotalPages(response.data.pagination.totalPages);
+      setTotalProducts(response.data.pagination.totalProducts);
     } catch (error) {
       showError('Failed to load products');
     } finally {
@@ -105,7 +169,7 @@ const Products = memo(() => {
       className="min-h-screen bg-gray-50"
     >
       {loading ? (
-        <LoadingSpinner text="Loading products..." />
+        <LoadingSpinner text="Loading products..." size='large'/>
       ) : (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -144,7 +208,7 @@ const Products = memo(() => {
           <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-smflex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 p-4 rounded-lg gap-3">
             <div className="flex items-center space-x-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                {filteredProducts.length} Products
+                {totalProducts} Products
               </h3>
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -273,6 +337,11 @@ const Products = memo(() => {
         )}
       </div>
       )}
+       <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </motion.div>
   );
 });

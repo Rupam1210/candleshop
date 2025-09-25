@@ -164,13 +164,13 @@ const ProductCard = ({ product, onUpdate }) => {
                     </button>
                   </>
                 )}
-                <motion.button
+                {/* <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors"
                 >
                   <Eye className="h-4 w-4 text-gray-600" />
-                </motion.button>
+                </motion.button> */}
               </div>
             </div>
           </div>
