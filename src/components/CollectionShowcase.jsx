@@ -5,25 +5,28 @@ import { ArrowRight } from 'lucide-react';
 import { collectionsAPI } from '../services/api';
 import { showError } from '../utils/toast';
 import LoadingSpinner from './LoadingSpinner';
+import { useProducts } from '../context/ProductContext';
 
 const CollectionShowcase = memo(() => {
-  const [collections, setCollections] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [collections, setCollections] = useState([]);
+  const { collections, loading } = useProducts();
+  console.log(collections);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadCollections();
-  }, []);
+  // useEffect(() => {
+  //   loadCollections();
+  // }, []);
 
-  const loadCollections = async () => {
-    try {
-      const response = await collectionsAPI.getAll();
-      setCollections(response.data.collections);
-    } catch (error) {
-      showError('Failed to load collections');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const loadCollections = async () => {
+  //   try {
+  //     const response = await collectionsAPI.getAll();
+  //     setCollections(response.data.collections);
+  //   } catch (error) {
+  //     showError('Failed to load collections');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (loading) {
     return <LoadingSpinner text="Loading collections..." />;
@@ -66,7 +69,7 @@ const CollectionShowcase = memo(() => {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
-          {collections.map((collection, index) => (
+          {collections?.map((collection, index) => (
             <motion.div
               key={collection._id || collection.id}
               variants={itemVariants}

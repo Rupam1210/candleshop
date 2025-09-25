@@ -8,7 +8,7 @@ import ImageUpload from './ImageUpload';
 const AdminCollectionManager = ({ isOpen, onClose }) => {
   const modalRef = useRef();
 
-  const { collections, addCollection, updateCollection, deleteCollection } = useProducts();
+  const { collections, addCollection, updateCollection, deleteCollection, loadCollections } = useProducts();
   const { user } = useAuth();
   const [editingCollection, setEditingCollection] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -89,7 +89,8 @@ const handleInputChange = (e) => {
         resetForm();
         setShowAddForm(false);
         setEditingCollection(null);
-        window.location.reload();
+        await loadCollections();
+        //  
       } else {
         setErrors({ submit: result.error });
       }

@@ -68,7 +68,7 @@ const Header = () => {
               whileTap={{ scale: 0.95 }}
             >
               <Link to="/" className="text-2xl font-bold text-amber-900 hover:text-amber-800 transition-colors">
-               FragratingFlare
+               FragratiingFlare
               </Link>
             </motion.div>
 
