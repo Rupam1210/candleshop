@@ -18,7 +18,7 @@ const Cart = ({ isOpen, onClose }) => {
     // Here you would integrate with a payment processor like Stripe
     alert('Checkout functionality would be integrated with a payment processor');
   };
-  console.log(items)
+  // console.log(items)
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">

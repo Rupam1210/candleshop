@@ -16,13 +16,14 @@ export const ProductProvider = ({ children }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [allCollections, setAllCollections] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  // const [totalPages, setTotalPages] = useState(1);
   // Load products from API
   const loadProducts = async (params = {}) => {
     setLoading(true);
     try {
       const response = await productsAPI.getAll(params);
       setAllProducts(response.data.products);
+      
       return response.data;
     } catch (error) {
       console.error('Failed to load products:', error);
@@ -49,10 +50,17 @@ export const ProductProvider = ({ children }) => {
     loadProducts();
     loadCollections();
   }, []);
-  const getProductById = (id) => {
-    // console.log(id);
-    // console.log (allProducts);
-    return allProducts.find(product => product._id === id);
+  const getProductById = async(id) => {
+    try {
+      const response =  await productsAPI.getById(id);
+       
+      return response.data.product;
+    } catch (error) {
+      console.error('Failed to load product:', error);
+      return [];
+    }
+    
+    // return allProducts.find(product => product._id === id);
   };
 
   const getProductsByCollection = async(id) => {

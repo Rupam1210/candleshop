@@ -1,32 +1,131 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Heart, Star, Truck, Shield, RotateCcw, Check, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useProducts } from '../context/ProductContext';
-import { useCart } from '../context/CartContext';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ShoppingBag,
+  Heart,
+  Star,
+  Truck,
+  Shield,
+  RotateCcw,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { useProducts } from "../context/ProductContext";
+import { useCart } from "../context/CartContext";
+
+// available scents
+const parseScentsFromString = (scentsString) => {
+  const scentDescriptions = {
+    lavender: "Calming floral scent with relaxing properties",
+    coffee: "Rich aromatic blend with warm coffee notes",
+    lemon: "Fresh citrus burst with energizing qualities",
+    "raspberry vanilla": "Sweet fruity blend with creamy vanilla",
+    vanilla: "Classic warm scent with comforting notes",
+    musk: "Deep earthy notes with mysterious allure",
+    rose: "Romantic floral with timeless elegance",
+    "green apple": "Crisp fresh fruit with invigorating scent",
+    jasmine: "Exotic floral with intoxicating fragrance",
+    sandalwood: "Woody and warm with meditative qualities",
+    eucalyptus: "Fresh and minty with spa-like feel",
+    cinnamon: "Warm spice with cozy winter vibes",
+    "ocean breeze": "Fresh and airy with coastal essence",
+    "cherry blossom": "Delicate floral with spring freshness",
+    amber: "Rich and resinous with luxury feel",
+    peppermint: "Cool and refreshing with tingling sensation",
+  };
+
+  return scentsString.split(",").map((scent, index) => {
+    const trimmedScent = scent.trim().toLowerCase();
+    const scentId = trimmedScent.replace(/\s+/g, "-");
+    return {
+      id: scentId,
+      name: scent.trim(),
+      description:
+        scentDescriptions[trimmedScent] ||
+        `Delightful ${scent.trim().toLowerCase()} fragrance`,
+    };
+  });
+};
+
+// Parse colors from string and add color codes
+const parseColorsFromString = (colorsString) => {
+  const colorData = {
+    pink: { color: "#FFB6C1", description: "Soft and romantic pink" },
+    red: { color: "#DC143C", description: "Bold and passionate red" },
+    white: { color: "#FFFFFF", description: "Pure and classic white" },
+    purple: { color: "#DDA0DD", description: "Elegant and royal purple" },
+    yellow: { color: "#FFD700", description: "Bright and cheerful yellow" },
+    blue: { color: "#87CEEB", description: "Calm and serene blue" },
+    green: { color: "#90EE90", description: "Fresh and natural green" },
+    orange: { color: "#FFA500", description: "Vibrant and energetic orange" },
+    black: { color: "#2F2F2F", description: "Sophisticated and sleek black" },
+    cream: { color: "#F5F5DC", description: "Warm and cozy cream" },
+    coral: { color: "#FF7F50", description: "Tropical and lively coral" },
+    lavender: { color: "#E6E6FA", description: "Gentle and soothing lavender" },
+  };
+
+  return colorsString.split(",").map((color, index) => {
+    const trimmedColor = color.trim().toLowerCase();
+    const colorId = trimmedColor.replace(/\s+/g, "-");
+    return {
+      id: colorId,
+      name: color.trim(),
+      color: colorData[trimmedColor]?.color || "#CCCCCC",
+      description:
+        colorData[trimmedColor]?.description ||
+        `Beautiful ${color.trim().toLowerCase()} shade`,
+    };
+  });
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
-   
+
   const navigate = useNavigate();
   const { getProductById } = useProducts();
   const { addToCart } = useCart();
-  
+
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
+  const [activeTab, setActiveTab] = useState("description");
+  const [selectedScent, setSelectedScent] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const foundProduct = getProductById(id);
-    
-    if (foundProduct) {
-      setProduct(foundProduct);
-    } else {
-      navigate('/products');
-    }
+    const fetchProduct = async () => {
+      try {
+        const foundProduct = await getProductById(id);
+
+        if (foundProduct) {
+          setProduct(foundProduct);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        navigate("/products"); // optional: handle error same way
+      }
+    };
+    fetchProduct();
   }, [id, getProductById, navigate]);
+
+  // useEffect(() => {
+  //   if (product) {
+  //     const scents = parseScentsFromString(product.scent);
+  //     const colors = parseColorsFromString(product.color);
+
+  //     // Set default selections
+  //     if (scents.length > 0 && !selectedScent) {
+  //       setSelectedScent(scents[0].id);
+  //     }
+  //     if (colors.length > 0 && !selectedColor) {
+  //       setSelectedColor(colors[0].id);
+  //     }
+  //   }
+  // }, [product]);
 
   if (!product) {
     return (
@@ -36,10 +135,43 @@ const ProductDetail = () => {
     );
   }
 
+  const scents = product ? parseScentsFromString(product.scent) : [];
+  const colors = product ? parseColorsFromString(product.color) : [];
+ 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!selectedColor) newErrors.color = 'Colour is required';
+    if (!selectedScent) newErrors.scent = 'Fragrance is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleAddToCart = () => {
+     if (!validateForm()) return;
+    const cartItem = {
+      product: product._id, // required ObjectId reference
+      quantity: quantity,
+      colour: scents.find((s) => s.id === selectedScent), // string
+      scent: colors.find((c) => c.id === selectedColor), // string
+      price: product.price, // number (always use DB price, not frontend value!)
+    };
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
+    // const cartItem = {
+    //   id: 'daisy-candle',
+    //   name: 'Daisy Candle',
+    //   price: 40.00,
+    //   originalPrice: 100.00,
+    //   scent: scents.find(s => s.id === selectedScent),
+    //   color: colors.find(c => c.id === selectedColor),
+    //   quantity: quantity,
+    //   image: '/api/placeholder/300/300'
+    // };
+
+    // Simulate adding to cart
+    console.log("Added to cart:", cartItem);
+
+    // Show success animation
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -49,7 +181,9 @@ const ProductDetail = () => {
   };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+    setSelectedImage(
+      (prev) => (prev - 1 + product.images.length) % product.images.length
+    );
   };
 
   return (
@@ -65,9 +199,19 @@ const ProductDetail = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center space-x-2 text-sm text-gray-500 mb-8"
         >
-          <button onClick={() => navigate('/')} className="hover:text-amber-700">Home</button>
+          <button
+            onClick={() => navigate("/")}
+            className="hover:text-amber-700"
+          >
+            Home
+          </button>
           <span>/</span>
-          <button onClick={() => navigate('/products')} className="hover:text-amber-700">Products</button>
+          <button
+            onClick={() => navigate("/products")}
+            className="hover:text-amber-700"
+          >
+            Products
+          </button>
           <span>/</span>
           <span className="text-gray-900">{product.name}</span>
         </motion.nav>
@@ -92,7 +236,7 @@ const ProductDetail = () => {
                   className="w-full h-full object-cover"
                 />
               </AnimatePresence>
-              
+
               {product.images.length > 1 && (
                 <>
                   <button
@@ -121,7 +265,9 @@ const ProductDetail = () => {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedImage(index)}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index ? 'border-amber-700' : 'border-gray-200'
+                      selectedImage === index
+                        ? "border-amber-700"
+                        : "border-gray-200"
                     }`}
                   >
                     <img
@@ -144,10 +290,14 @@ const ProductDetail = () => {
             {/* Header */}
             <div>
               <p className="text-amber-600 font-medium">{product.category}</p>
-              <h1 className="text-3xl font-bold text-gray-900 mt-2">{product.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mt-2">
+                {product.name}
+              </h1>
               <div className="flex items-center space-x-4 mt-4">
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-gray-900">₹ {product.price.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-gray-900">
+                    ₹ {product.price.toFixed(2)}
+                  </span>
                   {product.originalPrice && (
                     <span className="text-lg text-gray-500 line-through">
                       ₹ {product.originalPrice.toFixed(2)}
@@ -182,11 +332,68 @@ const ProductDetail = () => {
                 <p className="font-semibold text-sm">{product.scent}</p>
               </div>
             </div>
+            {/* Scent Selection */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Choose Scent
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {scents.map((scent) => (
+                  <button
+                    key={scent.id}
+                    onClick={() => setSelectedScent(scent.id)}
+                    className={`p-3 rounded-lg border-2 text-left transition-all ${
+                      selectedScent === scent.id
+                        ? "border-orange-400 bg-orange-50 text-orange-800"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="font-medium text-sm">{scent.name}</div>
+                    <div className="text-xs text-gray-600">
+                      {scent.description}
+                    </div>
+                  </button>
+                ))}
+              </div>
+               {errors.scent && <p className="text-red-500 text-sm mt-1">{errors.scent}</p>}
+            </div>
+
+            {/* Color Selection */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Choose Color
+              </h3>
+              <div className="flex space-x-3">
+                {colors.map((color) => (
+                  <button
+                    key={color.id}
+                    onClick={() => setSelectedColor(color.id)}
+                    className={`relative w-12 h-12 rounded-full border-4 transition-all ${
+                      selectedColor === color.id
+                        ? "border-orange-400 scale-110"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                    style={{ backgroundColor: color.color }}
+                    title={color.description}
+                  >
+                    {selectedColor === color.id && (
+                      <div className="absolute inset-0 rounded-full border-2 border-white shadow-lg"></div>
+                    )}
+                  </button>
+                ))}
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                Selected: {colors.find((c) => c.id === selectedColor)?.name}
+              </p>
+               {errors.color && <p className="text-red-500 text-sm mt-1">{errors.color}</p>}
+            </div>
 
             {/* Quantity & Add to Cart */}
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <label className="text-sm font-medium text-gray-700">Quantity:</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Quantity:
+                </label>
                 <div className="flex items-center border border-gray-300 rounded-lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -194,7 +401,9 @@ const ProductDetail = () => {
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
+                  <span className="px-4 py-2 border-x border-gray-300">
+                    {quantity}
+                  </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="px-3 py-2 hover:bg-gray-50"
@@ -213,9 +422,9 @@ const ProductDetail = () => {
                   className={`flex-1 py-4 px-6 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
                     product.inStock
                       ? isAdded
-                        ? 'bg-green-600 text-white'
-                        : 'bg-amber-700 text-white hover:bg-amber-800'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ? "bg-green-600 text-white"
+                        : "bg-amber-700 text-white hover:bg-amber-800"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                 >
                   {isAdded ? (
@@ -226,7 +435,9 @@ const ProductDetail = () => {
                   ) : (
                     <>
                       <ShoppingBag className="h-5 w-5" />
-                      <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
+                      <span>
+                        {product.inStock ? "Add to Cart" : "Out of Stock"}
+                      </span>
                     </>
                   )}
                 </motion.button>
@@ -239,6 +450,10 @@ const ProductDetail = () => {
                   <Heart className="h-5 w-5" />
                 </motion.button> */}
               </div>
+             <p className="mt-3 text-sm text-gray-600 flex items-center gap-2">
+    <span className="inline-block w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+    <span className="italic">For customization contact to us</span>
+  </p>
             </div>
 
             {/* Trust Badges */}
@@ -268,14 +483,14 @@ const ProductDetail = () => {
         >
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8">
-              {['description', 'ingredients', 'care'].map((tab) => (
+              {["description", "ingredients", "care"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm capitalize transition-colors ${
                     activeTab === tab
-                      ? 'border-amber-700 text-amber-700'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? "border-amber-700 text-amber-700"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   {tab}
@@ -293,13 +508,15 @@ const ProductDetail = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
-                {activeTab === 'description' && (
+                {activeTab === "description" && (
                   <div className="prose max-w-none">
-                    <p className="text-gray-700 leading-relaxed">{product.longDescription}</p>
+                    <p className="text-gray-700 leading-relaxed">
+                      {product.longDescription}
+                    </p>
                   </div>
                 )}
 
-                {activeTab === 'ingredients' && (
+                {activeTab === "ingredients" && (
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Ingredients</h3>
                     <ul className="space-y-2">
@@ -313,21 +530,33 @@ const ProductDetail = () => {
                   </div>
                 )}
 
-                {activeTab === 'care' && (
+                {activeTab === "care" && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Care Instructions</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Care Instructions
+                    </h3>
                     <div className="space-y-4">
                       <div>
-                        <h4 className="font-medium text-gray-900">First Burn</h4>
-                        <p className="text-gray-700">{product.careInstructions.firstBurn}</p>
+                        <h4 className="font-medium text-gray-900">
+                          First Burn
+                        </h4>
+                        <p className="text-gray-700">
+                          {product.careInstructions.firstBurn}
+                        </p>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900">Wick Trimming</h4>
-                        <p className="text-gray-700">{product.careInstructions.trimWick}</p>
+                        <h4 className="font-medium text-gray-900">
+                          Wick Trimming
+                        </h4>
+                        <p className="text-gray-700">
+                          {product.careInstructions.trimWick}
+                        </p>
                       </div>
                       <div>
                         <h4 className="font-medium text-gray-900">Safety</h4>
-                        <p className="text-gray-700">{product.careInstructions.safety}</p>
+                        <p className="text-gray-700">
+                          {product.careInstructions.safety}
+                        </p>
                       </div>
                     </div>
                   </div>

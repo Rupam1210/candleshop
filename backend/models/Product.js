@@ -55,6 +55,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Scent profile is required']
   },
+  color: {
+    type: String,
+    required: [true, 'colour is required']
+  },
   burnTime: {
     type: String,
     required: [true, 'Burn time is required']

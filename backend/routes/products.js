@@ -5,6 +5,22 @@ const Collection = require('../models/Collection');
 const { protect, admin } = require('../middleware/auth');
 
 const router = express.Router();
+// async function addMissingFields() {
+//   try {
+//     // Update all products that don't have the 'color' field
+//     const result = await Product.updateMany(
+//       { color: { $exists: true } },  // condition
+//       { $set: { color: 'White ,Pink, Red ,Yellow, Blue, Green ,Brown' } } // set default value
+//     );
+//     console.log(result)
+//     console.log(`${result.modifiedCount} products updated with default color`);
+//   } catch (err) {
+//     console.error('Error updating products:', err);
+//   }
+// }
+
+// // Run the function
+// addMissingFields();
 
 // @desc    Get all products with filtering, sorting, and pagination
 // @route   GET /api/products
@@ -135,11 +151,11 @@ router.get('/:id', async (req, res) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       product = await Product.findById(req.params.id)
         .populate('collection', 'name slug description')
-        .populate('reviews');
+         
     } else {
       product = await Product.findOne({ slug: req.params.id })
         .populate('collection', 'name slug description')
-        .populate('reviews');
+         
     }
 
     if (!product || !product.isActive) {
@@ -171,6 +187,7 @@ router.post('/', protect, admin, [
   body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
   body('category').notEmpty().withMessage('Category is required'),
   body('collection').isMongoId().withMessage('Valid collection ID is required'),
+  body('color').trim().notEmpty().withMessage('color  is required'),
   body('scent').trim().notEmpty().withMessage('Scent profile is required'),
   body('burnTime').trim().notEmpty().withMessage('Burn time is required'),
   body('size').trim().notEmpty().withMessage('Size is required'),

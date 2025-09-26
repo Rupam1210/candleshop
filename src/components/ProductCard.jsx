@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Heart, Check, Eye, Trash2, Edit } from "lucide-react";
+import { ShoppingBag, Heart, Check, Eye, Trash2, Edit,ShoppingCart, X } from "lucide-react";
 // import { useCart } from '../hooks/useCart';
 // import { useAuth } from '../hooks/useAuth';
 import ProductEditModal from "./ProductEditModal";
@@ -16,7 +16,11 @@ const ProductCard = ({ product, onUpdate }) => {
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-
+ 
+//   console.log(product)
+// const scentOptions = product.scent
+//   ? product.scent.split(",").map((s) => s.trim())
+//   : [];
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -24,6 +28,18 @@ const ProductCard = ({ product, onUpdate }) => {
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
+//  const handleAddToCart = () => {
+//     if (!selectedColor || !selectedScent) {
+//       alert("Please select both color and scent!");
+//       return;
+//     }
+//     addToCart({ ...product, color: selectedColor, scent: selectedScent });
+//     setIsModalOpen(false);
+//     setIsAdded(true);
+//     setTimeout(() => setIsAdded(false), 2000);
+//     setSelectedColor("");
+//     setSelectedScent("");
+//   };
 
   const handleEdit = (e) => {
     e.preventDefault();
@@ -104,9 +120,10 @@ const ProductCard = ({ product, onUpdate }) => {
                   exit={{ opacity: 0, y: 20 }}
                   className="absolute inset-x-4 bottom-4 flex gap-2"
                 >
-                  <motion.button
+                  {/* <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    //  onClick={() => setIsModalOpen(true)}
                     onClick={handleAddToCart}
                     disabled={isAdded}
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
@@ -126,7 +143,7 @@ const ProductCard = ({ product, onUpdate }) => {
                         <span>Add to Cart</span>
                       </>
                     )}
-                  </motion.button>
+                  </motion.button> */}
 
                   {/* <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -138,7 +155,8 @@ const ProductCard = ({ product, onUpdate }) => {
                 </motion.div>
               )}
             </AnimatePresence>
-
+             {/* Modal */}
+       
             {/* Quick View */}
             <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 opacity-100 sm:opacity-0 ">
               <div className="flex space-x-2">

@@ -18,6 +18,7 @@ const AdminUpload = ({ isOpen, onClose }) => {
     category: '',
     collection: '',
     scent: '',
+    color: '',
     burnTime: '',
     size: '',
     weight: '',
@@ -87,6 +88,7 @@ const AdminUpload = ({ isOpen, onClose }) => {
     if (!formData.category.trim()) newErrors.category = 'Category is required';
     if (!formData.collection) newErrors.collection = 'Collection is required';
     if (!formData.scent.trim()) newErrors.scent = 'Scent is required';
+     if (!formData.color.trim()) newErrors.color = 'Colour is required';
     if (!formData.burnTime.trim()) newErrors.burnTime = 'Burn time is required';
     if (!formData.size.trim()) newErrors.size = 'Size is required';
     if (!formData.weight.trim()) newErrors.weight = 'Weight is required';
@@ -147,6 +149,7 @@ const AdminUpload = ({ isOpen, onClose }) => {
       category: '',
       collection: '',
       scent: '',
+      color: '',
       burnTime: '',
       size: '',
       weight: '',
@@ -403,6 +406,22 @@ const AdminUpload = ({ isOpen, onClose }) => {
                       placeholder="e.g., Vanilla, Amber, Cream"
                     />
                     {errors.scent && <p className="text-red-500 text-sm mt-1">{errors.scent}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Colour *
+                    </label>
+                    <input
+                      type="text"
+                      name="color"
+                      value={formData.color}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                        errors.scent ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="e.g., Pink , Red"
+                    />
+                    {errors.color && <p className="text-red-500 text-sm mt-1">{errors.color}</p>}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
