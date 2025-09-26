@@ -205,7 +205,7 @@ const ProductCard = ({ product, onUpdate }) => {
 
               <div className="text-xs text-gray-500 space-y-1">
                 <div>
-                  <strong>Scent:</strong> {product.scent}
+                  <strong>Available Scent:</strong> {product.scent}
                 </div>
                 <div>
                   <strong>Size:</strong> {product.size}
