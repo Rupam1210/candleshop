@@ -37,19 +37,19 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'hello@memoryboxcandle.com',
+      details: 'fragratiingflare@gmail.com',
       description: 'Send us an email anytime'
     },
     {
       icon: Phone,
       title: 'Call Us',
-      details: '+91 98765 43210',
+      details: '+91 7524075088',
       description: 'Mon-Fri from 9am to 6pm'
     },
     {
       icon: MapPin,
       title: 'Visit Us',
-      details: 'Mumbai, Maharashtra, India',
+      details: 'Varanasi, Uttar Pradesh, India',
       description: 'Come say hello at our studio'
     },
     {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
-
+import myimage from '../../src/image/hero.jpg' ;
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
@@ -151,7 +151,7 @@ const Hero = () => {
                   transition={{ delay: 0.9, type: "spring" }}
                   className="text-3xl font-bold text-amber-700"
                 >
-                  45h
+                  35H+
                 </motion.div>
                 <div className="text-sm text-gray-600">Average Burn Time</div>
               </div>
@@ -178,7 +178,7 @@ const Hero = () => {
                 className="aspect-square rounded-2xl overflow-hidden shadow-2xl"
               >
                 <img
-                  src="https://images.pexels.com/photos/4021876/pexels-photo-4021876.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src={myimage}
                   alt="Luxury candle collection"
                   className="w-full h-full object-cover"
                 />
@@ -209,7 +209,7 @@ const Hero = () => {
                 <div className="text-center">
                   <div className="text-2xl font-bold">4.9</div>
                   <div className="text-xs">★★★★★</div>
-                  <div className="text-xs opacity-90">2,847 reviews</div>
+                  <div className="text-xs opacity-90">247+ reviews</div>
                 </div>
               </motion.div>
             </div>

@@ -6,53 +6,127 @@ import { showError } from "../utils/toast";
 import ProductCard from "../components/ProductCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useProducts } from "../context/ProductContext";
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pages = [];
-  // console.log(totalPages)
+import { useSearchParams } from "react-router-dom";
+// const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+//   const pages = [];
+//   // console.log(totalPages)
 
-  let count = totalPages;
-  //  filter?count= Math.ceil(filter.length/16):count=totalPages;
-  // Generate page numbers (you can improve for large number of pages)
-  for (let i = 1; i <= count; i++) {
-    pages.push(i);
-  }
+//   let count = totalPages;
+//   //  filter?count= Math.ceil(filter.length/16):count=totalPages;
+//   // Generate page numbers (you can improve for large number of pages)
+//   for (let i = 1; i <= count; i++) {
+//     pages.push(i);
+//   }
+
+//   return (
+//     <div className="flex justify-center my-8">
+//       <nav className="inline-flex space-x-1">
+//         {/* Previous Button */}
+//         <button
+//           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+//           className={`px-3 py-1 rounded-md border ${
+//             currentPage === 1
+//               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+//               : "bg-white text-gray-700 hover:bg-gray-100"
+//           }`}
+//         >
+//           Previous
+//         </button>
+
+//         {/* Page Numbers */}
+//         {pages.map((page) => (
+//           <button
+//             key={page}
+//             onClick={() => onPageChange(page)}
+//             className={`px-3 py-1 rounded-md border ${
+//               currentPage === page
+//                 ? "bg-orange-500 text-white border-orange-500"
+//                 : "bg-white text-gray-700 hover:bg-gray-100"
+//             }`}
+//           >
+//             {page}
+//           </button>
+//         ))}
+
+//         {/* Next Button */}
+//         <button
+//           onClick={() =>
+//             currentPage < totalPages && onPageChange(currentPage + 1)
+//           }
+//           className={`px-3 py-1 rounded-md border ${
+//             currentPage === totalPages
+//               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+//               : "bg-white text-gray-700 hover:bg-gray-100"
+//           }`}
+//         >
+//           Next
+//         </button>
+//       </nav>
+//     </div>
+//   );
+// };
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const getPageNumbers = () => {
+    const pages = [];
+
+    // Always show first page
+    if (currentPage > 3) {
+      pages.push(1, "...");
+    }
+
+    // Show 2 pages before and after current
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      pages.push(i);
+    }
+
+    // Always show last page
+    if (currentPage < totalPages - 2) {
+      pages.push("...", totalPages);
+    }
+
+    return pages;
+  };
+
+  const pages = getPageNumbers();
 
   return (
     <div className="flex justify-center my-8">
       <nav className="inline-flex space-x-1">
-        {/* Previous Button */}
+        {/* Previous */}
         <button
           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-          className={`px-3 py-1 rounded-md border ${
+          className={`px-3 py-1 rounded-full border ${
             currentPage === 1
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-white text-gray-700 hover:bg-gray-100"
           }`}
         >
-          Previous
+          Prev
         </button>
 
         {/* Page Numbers */}
-        {pages.map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === page
-                ? "bg-orange-500 text-white border-orange-500"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
+        {pages.map((page, index) =>
+          page === "..." ? (
+            <span key={index} className="px-3 py-1">...</span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => onPageChange(page)}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center ${
+                currentPage === page
+                  ? "bg-orange-500 text-white border-orange-500"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              {page}
+            </button>
+          )
+        )}
 
-        {/* Next Button */}
+        {/* Next */}
         <button
-          onClick={() =>
-            currentPage < totalPages && onPageChange(currentPage + 1)
-          }
-          className={`px-3 py-1 rounded-md border ${
+          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+          className={`px-3 py-1 rounded-full border ${
             currentPage === totalPages
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-white text-gray-700 hover:bg-gray-100"
@@ -75,11 +149,26 @@ const Products = memo(() => {
   const [sortBy, setSortBy] = useState("name");
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [viewMode, setViewMode] = useState("grid");
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const { loadProducts } = useProducts();
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+ 
 
+  // Read current page from URL
+  const currentPage = parseInt(searchParams.get("page")) || 1;
+  // Update URL when currentPage changes
+   const handlePageChange = (page) => {
+    if (page !== currentPage) {
+      setSearchParams({ page: page.toString() });
+    }
+  };
+
+// useEffect(() => {
+//   window.scrollTo(0, 0);
+// }, []);
   useEffect(() => {
     loadProduct();
     loadProducts({ page: currentPage, limit: 16 });
@@ -115,7 +204,7 @@ const Products = memo(() => {
     "All",
     ...new Set(products.map((product) => product.category)),
   ];
-
+  
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
@@ -381,7 +470,7 @@ const Products = memo(() => {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
         filter={filteredProducts}
       />
     </motion.div>

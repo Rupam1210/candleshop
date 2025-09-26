@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Leaf, Award, Users } from 'lucide-react';
+import myimage from '../../src/image/hero.jpg';
 
 const About = () => {
   const values = [
@@ -57,7 +58,7 @@ const About = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Illuminating Lives Since 2024</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Illuminating Lives Since 2025</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
                   What started as a small passion project in our kitchen has grown into a beloved brand 
@@ -84,7 +85,7 @@ const About = () => {
               className="relative"
             >
               <img
-                src="https://images.pexels.com/photos/4021876/pexels-photo-4021876.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src={myimage}
                 alt="Candle making process"
                 className="rounded-2xl shadow-lg"
               />
