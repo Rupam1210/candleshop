@@ -147,7 +147,7 @@ useEffect(() => {
     setItems(guestItems);
     // settotal(guestItems.totalItems)
   }
-}, [user]);
+}, []);
 
   // useEffect(() => {
 
@@ -180,7 +180,7 @@ useEffect(() => {
     };
 
     initializeCart();
-  }, [user]);
+  }, []);
 
    
   
