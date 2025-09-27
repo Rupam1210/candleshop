@@ -93,6 +93,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+   const [isAdd, setIsAdd] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
   const [selectedScent, setSelectedScent] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -150,7 +151,7 @@ const ProductDetail = () => {
   };
   const handleAddToCart = async () => {
     if (!validateForm()) return;
-
+setIsAdd(true);
     try {
       const cartItem = {
         productId: product._id,
@@ -161,16 +162,19 @@ const ProductDetail = () => {
         price: product.price, // number (always use DB price, not frontend value!)
       };
       console.log("Added to cart:", cartItem);
+     
       if (user) {
         const res = await addToCart(cartItem);
         // console.log(res)
         if (res.success) {
+           setIsAdd(false)
           setIsAdded(true);
           setTimeout(() => setIsAdded(false), 2000);
         }
       } else {
         await addToGuestCart(cartItem);
         await loadGuestCart();
+         setIsAdd(false)
         // console.log(items)
 
         setIsAdded(true);
@@ -453,7 +457,11 @@ const ProductDetail = () => {
                     <>
                       <ShoppingBag className="h-5 w-5" />
                       <span>
-                        {product.inStock ? "Add to Cart" : "Out of Stock"}
+                     {isAdd ? (
+    <div className="h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+  ) : (
+    product.inStock ? "Add to Cart" : "Out of Stock"
+  )}
                       </span>
                     </>
                   )}

@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 
 export const showSuccess = (message) => {
   toast.success(message, {
-    duration: 4000,
+    duration: 2000,
     position: 'top-right',
     style: {
       background: '#10B981',
@@ -14,7 +14,7 @@ export const showSuccess = (message) => {
 
 export const showError = (message) => {
   toast.error(message, {
-    duration: 5000,
+    duration: 2000,
     position: 'top-right',
     style: {
       background: '#EF4444',

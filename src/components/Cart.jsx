@@ -35,7 +35,7 @@ const Cart = ({ isOpen, onClose }) => {
         loadGuestCart();
       }
          
-      }, [isOpen,items,item]);
+      }, [isOpen,user]);
    
    
    const upQuantity=async(itemid,qty)=>{
@@ -57,7 +57,9 @@ const Cart = ({ isOpen, onClose }) => {
     const upquestQuantity=async(Id,qty)=>{
     try {
         await updateGuestCartQuantity(Id, qty)
-        await loadGuestCart();
+       const res=await loadGuestCart();
+        
+        setcart(res)
        
         // console.log(res)
     } catch (error) {
@@ -88,7 +90,9 @@ const Cart = ({ isOpen, onClose }) => {
       }
       }else{
         await removeFromGuestCart(id);
-        await loadGuestCart();
+        const res=await loadGuestCart();
+         
+        setcart(res)
       }
       
       
@@ -258,11 +262,11 @@ const Cart = ({ isOpen, onClose }) => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
-                  <span>{carts.totalPrice>= 50 ? 'Free' : '₹99'}</span>
+                  <span>{carts.totalPrice>= 100 ? 'Free' : '₹99'}</span>
                 </div>
                 <div className="flex justify-between text-lg font-semibold border-t pt-2">
                   <span>Total</span>
-                  <span>₹{(carts.totalPrice + (carts.totalPrice >= 50 ? 0 : 99))?.toFixed(2)}</span>
+                  <span>₹{(carts.totalPrice + (carts.totalPrice >= 100 ? 0 : 99))?.toFixed(2)}</span>
                 </div>
               </div>
               

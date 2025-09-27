@@ -20,7 +20,7 @@ const FeaturedProducts = memo(() => {
       const response = await productsAPI.getFeatured();
       setProducts(response.data.products);
     } catch (error) {
-      showError('Failed to load featured products');
+       console.log(error)
     } finally {
       setLoading(false);
     }
