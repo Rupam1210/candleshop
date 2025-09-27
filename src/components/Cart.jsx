@@ -35,7 +35,7 @@ const Cart = ({ isOpen, onClose }) => {
         loadGuestCart();
       }
          
-      }, [user,isOpen,items,item]);
+      }, [isOpen,items,item]);
    
    
    const upQuantity=async(itemid,qty)=>{
