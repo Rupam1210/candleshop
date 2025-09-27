@@ -184,7 +184,7 @@ router.delete('/items/:productId', async (req, res) => {
 // @desc    Clear cart
 // @route   DELETE /api/cart
 // @access  Private
-router.delete('/', async (req, res) => {
+router.delete('/', async (req, res) => { 
   try {
     const cart = await Cart.findOne({ user: req.user.id });
     if (!cart) {
@@ -193,7 +193,7 @@ router.delete('/', async (req, res) => {
         message: 'Cart not found'
       });
     }
-
+ 
     await cart.clearCart();
 
     res.json({

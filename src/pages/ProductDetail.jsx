@@ -54,18 +54,22 @@ const parseScentsFromString = (scentsString) => {
 // Parse colors from string and add color codes
 const parseColorsFromString = (colorsString) => {
   const colorData = {
-    pink: { color: "#FFB6C1", description: "Soft and romantic pink" },
+    pink: { color: "#e60808ff", description: "Soft and romantic pink" },
     red: { color: "#DC143C", description: "Bold and passionate red" },
     white: { color: "#FFFFFF", description: "Pure and classic white" },
-    purple: { color: "#DDA0DD", description: "Elegant and royal purple" },
+    purple: { color: "#6d026dff", description: "Elegant and royal purple" },
     yellow: { color: "#FFD700", description: "Bright and cheerful yellow" },
-    blue: { color: "#87CEEB", description: "Calm and serene blue" },
-    green: { color: "#90EE90", description: "Fresh and natural green" },
-    orange: { color: "#FFA500", description: "Vibrant and energetic orange" },
-    black: { color: "#2F2F2F", description: "Sophisticated and sleek black" },
+    blue: { color: "#0438d5ff", description: "Calm and serene blue" },
+    green: { color: "#12cb15ff", description: "Fresh and natural green" },
+    orange: { color: "#ff8400ff", description: "Vibrant and energetic orange" },
+    black: { color: "#090909ff", description: "Sophisticated and sleek black" },
     cream: { color: "#F5F5DC", description: "Warm and cozy cream" },
     coral: { color: "#FF7F50", description: "Tropical and lively coral" },
     lavender: { color: "#E6E6FA", description: "Gentle and soothing lavender" },
+    brown: { color: "#8B4513", description: "Warm and earthy brown" },
+      gold: { color: "#FFD700", description: "Luxurious golden shine" },
+  silver: { color: "#C0C0C0", description: "Modern and sleek silver" }
+
   };
 
   return colorsString.split(",").map((color, index) => {

@@ -1,40 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Filter, Search, Grid, List } from 'lucide-react';
-import { useProducts } from '../context/ProductContext';
+import {  Search, Grid, List } from 'lucide-react';
+ 
 import ProductCard from '../components/ProductCard';
+import { collectionsAPI } from '../services/api';
 
 const CollectionDetail = () => {
   const { id } = useParams();
    
   const navigate = useNavigate();
-  const { getCollectionBySlug, getProductsByCollection } = useProducts();
+  // const { getCollectionBySlug, getProductsByCollection } = useProducts();
   
   const [collection, setCollection] = useState(null);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState('grid');
-
-  useEffect(() => {
-    const foundCollection = getCollectionBySlug(id);
-    const fetchProducts = async () => {
-    const products = await getProductsByCollection(id);
-    setProducts(products);
-  };
-  fetchProducts();
-    // console.log(getProductsByCollection(id));
-   
-    if (foundCollection) {
-      setCollection(foundCollection);
-      // const data =  getProductsByCollection(id);
-      // console.log(data);
-      // setProducts(data);
-      // console.log(collection);
+  const fetchcollections = async () => {
+    const res = await collectionsAPI.getById(id);
+    // console.log(res)
+    if (res.success) {
+      setCollection(res.data.collection);
+      setProducts(res.data.products);
+       
     } else {
       // navigate('/collections');
     }
+    // setCollection(res);
+  }
+  // const fetchProducts = async () => {
+  //   const products = await getProductsByCollection(id);
+  //   setProducts(products);
+  // };
+
+  useEffect(() => {
+    fetchcollections();
+    
+  // fetchProducts();
+    // console.log(getProductsByCollection(id));
+   
+    
   }, [id, navigate]);
   
 

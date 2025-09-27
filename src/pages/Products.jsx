@@ -318,13 +318,13 @@ const Products = memo(() => {
                 <h3 className="text-lg font-semibold text-gray-900">
                   {filteredProducts.length} Products
                 </h3>
-                <button
+                {/* <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="md:hidden flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50"
                 >
                   <Filter className="h-4 w-4" />
                   <span>Filters</span>
-                </button>
+                </button> */}
               </div>
 
               <div className="flex items-center space-x-4">
@@ -367,7 +367,7 @@ const Products = memo(() => {
             </div>
 
             {/* Filters Panel */}
-            <motion.div
+            {/* <motion.div
               initial={false}
               animate={{
                 height: showFilters ? "auto" : 0,
@@ -419,8 +419,11 @@ const Products = memo(() => {
                     ₹{priceRange[0]} - ₹{priceRange[1]}
                   </span>
                 </div>
-              </div> */}
-            </motion.div>
+              </div> 
+                </motion.div>
+              */}
+             
+
           </motion.div>
 
           {/* Product Grid */}
