@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
+import { showSuccess } from '../utils/toast';
+ 
+ 
 
 const AuthContext = createContext(undefined);
 
@@ -14,6 +17,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+   
 
   useEffect(() => {
     // Check for stored token and get user data
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('token', token);
       setUser(user);
+      showSuccess("Login successfully")
       setIsLoading(false);
       return { success: true, user };
     } catch (error) {
@@ -70,7 +75,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+     
     localStorage.removeItem('token');
+
+    
   };
 
   const updateProfile = (userData) => {

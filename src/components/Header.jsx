@@ -17,11 +17,12 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   
-  const { getTotalItems } = useCart();
+  const { total ,settotal} = useCart();
   const { user, logout, isAuthenticated } = useAuth();
   const { searchProducts } = useProducts();
   const navigate = useNavigate();
   const location = useLocation();
+  // console.log(total)
  
 
   const navigation = [
@@ -39,6 +40,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    settotal(0);
     setShowUserMenu(false);
     navigate('/');
   };
@@ -148,14 +150,14 @@ const Header = () => {
               >
                 <ShoppingBag className="h-5 w-5" />
                 <AnimatePresence>
-                  {getTotalItems() > 0 && (
+                  {total > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
                       className="absolute -top-2 -right-2 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
                     >
-                      {getTotalItems()}
+                      {total}
                     </motion.span>
                   )}
                 </AnimatePresence>

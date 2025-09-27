@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useProducts } from "../context/ProductContext";
 import { useCart } from "../context/CartContext";
+import { showError } from "../utils/toast";
+import { useAuth } from "../context/AuthContext";
 
 // available scents
 const parseScentsFromString = (scentsString) => {
@@ -85,7 +87,7 @@ const ProductDetail = () => {
 
   const navigate = useNavigate();
   const { getProductById } = useProducts();
-  const { addToCart } = useCart();
+  const { addToCart, addToGuestCart, loadGuestCart } = useCart();
 
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -94,7 +96,8 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [selectedScent, setSelectedScent] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-   const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -137,43 +140,53 @@ const ProductDetail = () => {
 
   const scents = product ? parseScentsFromString(product.scent) : [];
   const colors = product ? parseColorsFromString(product.color) : [];
- 
+
   const validateForm = () => {
     const newErrors = {};
-    if (!selectedColor) newErrors.color = 'Colour is required';
-    if (!selectedScent) newErrors.scent = 'Fragrance is required';
+    if (!selectedColor) newErrors.color = "Colour is required";
+    if (!selectedScent) newErrors.scent = "Fragrance is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const handleAddToCart = () => {
-     if (!validateForm()) return;
-    const cartItem = {
-      product: product._id, // required ObjectId reference
-      quantity: quantity,
-      colour: scents.find((s) => s.id === selectedScent), // string
-      scent: colors.find((c) => c.id === selectedColor), // string
-      price: product.price, // number (always use DB price, not frontend value!)
-    };
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
+  const handleAddToCart = async () => {
+    if (!validateForm()) return;
+
+    try {
+      const cartItem = {
+        productId: product._id,
+        product: product, // required ObjectId reference
+        quantity: quantity,
+        scent: selectedScent, // string
+        color: selectedColor, // string
+        price: product.price, // number (always use DB price, not frontend value!)
+      };
+      console.log("Added to cart:", cartItem);
+      if (user) {
+        const res = await addToCart(cartItem);
+        // console.log(res)
+        if (res.success) {
+          setIsAdded(true);
+          setTimeout(() => setIsAdded(false), 2000);
+        }
+      } else {
+        await addToGuestCart(cartItem);
+        await loadGuestCart();
+        // console.log(items)
+
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      showError("something went wrong");
     }
-    // const cartItem = {
-    //   id: 'daisy-candle',
-    //   name: 'Daisy Candle',
-    //   price: 40.00,
-    //   originalPrice: 100.00,
-    //   scent: scents.find(s => s.id === selectedScent),
-    //   color: colors.find(c => c.id === selectedColor),
-    //   quantity: quantity,
-    //   image: '/api/placeholder/300/300'
-    // };
+    // for (let i = 0; i < quantity; i++) {
+    //   addToCart(product);
+    // }
 
     // Simulate adding to cart
-    console.log("Added to cart:", cartItem);
 
     // Show success animation
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
   };
 
   const nextImage = () => {
@@ -355,7 +368,9 @@ const ProductDetail = () => {
                   </button>
                 ))}
               </div>
-               {errors.scent && <p className="text-red-500 text-sm mt-1">{errors.scent}</p>}
+              {errors.scent && (
+                <p className="text-red-500 text-sm mt-1">{errors.scent}</p>
+              )}
             </div>
 
             {/* Color Selection */}
@@ -385,7 +400,9 @@ const ProductDetail = () => {
               <p className="text-sm text-gray-600 mt-2">
                 Selected: {colors.find((c) => c.id === selectedColor)?.name}
               </p>
-               {errors.color && <p className="text-red-500 text-sm mt-1">{errors.color}</p>}
+              {errors.color && (
+                <p className="text-red-500 text-sm mt-1">{errors.color}</p>
+              )}
             </div>
 
             {/* Quantity & Add to Cart */}
@@ -450,10 +467,10 @@ const ProductDetail = () => {
                   <Heart className="h-5 w-5" />
                 </motion.button> */}
               </div>
-             <p className="mt-3 text-sm text-gray-600 flex items-center gap-2">
-    <span className="inline-block w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
-    <span className="italic">For customization contact to us</span>
-  </p>
+              <p className="mt-3 text-sm text-gray-600 flex items-center gap-2">
+                <span className="inline-block w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+                <span className="italic">For customization contact to us</span>
+              </p>
             </div>
 
             {/* Trust Badges */}

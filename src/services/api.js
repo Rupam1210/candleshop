@@ -143,8 +143,8 @@ export const cartAPI = {
     return await api.get('/cart');
   },
 
-  addItem: async (productId, quantity = 1) => {
-    return await api.post('/cart/items', { productId, quantity });
+  addItem: async (productId, quantity = 1,color,scent) => {
+    return await api.post('/cart/items', { productId, quantity,color,scent });
   },
 
   updateItem: async (productId, quantity) => {

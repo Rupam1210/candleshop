@@ -61,18 +61,23 @@ cartSchema.pre('save', function(next) {
 });
 
 // Method to add item to cart
-cartSchema.methods.addItem = function(productId, quantity, price) {
+cartSchema.methods.addItem = function(productId, quantity, price,color,scent) {
   const existingItemIndex = this.items.findIndex(
-    item => item.product.toString() === productId.toString()
+    item =>item.product.toString() === productId.toString() &&
+      (item.color === color || (!item.color && !color)) &&
+      (item.scent === scent || (!item.scent && !scent))
   );
 
   if (existingItemIndex >= 0) {
     this.items[existingItemIndex].quantity += quantity;
+    this.items[existingItemIndex].price = price;
   } else {
     this.items.push({
       product: productId,
       quantity,
-      price
+      price,
+      color,
+      scent
     });
   }
 
@@ -80,27 +85,60 @@ cartSchema.methods.addItem = function(productId, quantity, price) {
 };
 
 // Method to remove item from cart
-cartSchema.methods.removeItem = function(productId) {
-  this.items = this.items.filter(
-    item => item.product.toString() !== productId.toString()
-  );
+// cartSchema.methods.removeItem = function(productId) {
+//   this.items = this.items.filter(
+//     item => item.product.toString() !== productId.toString()
+//   );
+//   return this.save();
+// };
+cartSchema.methods.removeItem = function(productId  ) {
+  this.items = this.items.filter(item => {
+    return !(
+      item._id.toString() === productId.toString()  
+    );
+  });
   return this.save();
 };
+// Remove all variants of a product
+// cartSchema.methods.removeAllVariants = function(productId) {
+//   this.items = this.items.filter(
+//     item => item.product.toString() !== productId.toString()
+//   );
+//   return this.save();
+// };
 
 // Method to update item quantity
-cartSchema.methods.updateItemQuantity = function(productId, quantity) {
+
+// cartSchema.methods.updateItemQuantity = function(productId, quantity) {
+//   const item = this.items.find(
+//     item => item.product.toString() === productId.toString()
+//   );
+
+//   if (item) {
+//     if (quantity <= 0) {
+//       return this.removeItem(productId);
+//     }
+//     item.quantity = quantity;
+//     return this.save();
+//   }
+
+//   throw new Error('Item not found in cart');
+// };
+
+cartSchema.methods.updateQuantity = function(productId,  newQuantity) {
+ 
   const item = this.items.find(
-    item => item.product.toString() === productId.toString()
+    item => 
+      item._id.toString() === productId.toString()  
   );
-
+  
   if (item) {
-    if (quantity <= 0) {
+    item.quantity = newQuantity;
+    if (item.quantity <= 0) {
       return this.removeItem(productId);
-    }
-    item.quantity = quantity;
-    return this.save();
+    } 
   }
-
+  return this.save();
   throw new Error('Item not found in cart');
 };
 
@@ -108,6 +146,6 @@ cartSchema.methods.updateItemQuantity = function(productId, quantity) {
 cartSchema.methods.clearCart = function() {
   this.items = [];
   return this.save();
-};
+}; 
 
 module.exports = mongoose.model('Cart', cartSchema);

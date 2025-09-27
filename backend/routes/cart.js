@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     let cart = await Cart.findOne({ user: req.user.id })
-      .populate('items.product', 'name price images inStock');
+      .populate('items.product', 'name price images inStock category');
 
     if (!cart) {
       cart = await Cart.create({ user: req.user.id, items: [] });
@@ -35,7 +35,9 @@ router.get('/', async (req, res) => {
 // @access  Private
 router.post('/items', [
   body('productId').isMongoId().withMessage('Valid product ID is required'),
-  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1')
+  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
+   body('color').trim().notEmpty().withMessage('color  is required'),
+  body('scent').trim().notEmpty().withMessage('Scent profile is required')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -47,7 +49,7 @@ router.post('/items', [
       });
     }
 
-    const { productId, quantity } = req.body;
+    const { productId, quantity ,color,scent} = req.body;
 
     // Check if product exists and is in stock
     const product = await Product.findById(productId);
@@ -70,12 +72,12 @@ router.post('/items', [
     if (!cart) {
       cart = new Cart({ user: req.user.id, items: [] });
     }
-
+    // console.log(scent)
     // Add item to cart
-    await cart.addItem(productId, quantity, product.price);
+    await cart.addItem(productId, quantity, product.price,color,scent);
 
     // Populate and return updated cart
-    await cart.populate('items.product', 'name price images inStock');
+    await cart.populate('items.product', 'name price images inStock category');
 
     res.json({
       success: true,
@@ -119,7 +121,7 @@ router.put('/items/:productId', [
     }
 
     // Update item quantity
-    await cart.updateItemQuantity(productId, quantity);
+    await cart.updateQuantity(productId, quantity);
 
     // Populate and return updated cart
     await cart.populate('items.product', 'name price images inStock');
