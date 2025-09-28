@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import myimage from '../../src/image/hero.jpg' ;
+import GlowingDiwaliCircle from './Sale';
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
@@ -155,6 +156,7 @@ const Hero = () => {
                 </motion.div>
                 <div className="text-sm text-gray-600">Average Burn Time</div>
               </div>
+                 
             </motion.div>
           </motion.div>
 
@@ -190,7 +192,9 @@ const Hero = () => {
                 transition={{ delay: 1 }}
                 className="absolute -bottom-6 -left-6 bg-white rounded-xl p-6 shadow-lg"
               >
+             
                 <div className="flex items-center space-x-3">
+                  
                   <motion.div 
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -199,13 +203,14 @@ const Hero = () => {
                   <span className="text-sm font-medium text-gray-700">Free shipping on orders ₹ 100+</span>
                 </div>
               </motion.div>
-              
+              <GlowingDiwaliCircle/>
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.2 }}
                 className="absolute -top-6 -right-6 bg-amber-700 text-white rounded-xl p-4 shadow-lg"
               >
+
                 <div className="text-center">
                   <div className="text-2xl font-bold">4.9</div>
                   <div className="text-xs">★★★★★</div>

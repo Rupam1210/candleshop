@@ -61,14 +61,20 @@ const About = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Illuminating Lives Since 2025</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  What started as a small passion project in our kitchen has grown into a beloved brand 
-                  that brings the perfect ambiance to homes across the country. We believe that the right 
-                  scent can transform any space and create lasting memories.
+                  At Fragratiing flare, we believe a candle is more than
+light — it’s a story, a memory, and a moment of warmth.
+Each candle is handcrafted in small batches with natural soy
+wax, cotton wicks, and premium fragrances that linger
+beautifully.
                 </p>
                 <p>
-                  Our journey began when we couldn't find candles that met our standards for quality, 
-                  sustainability, and beautiful fragrance. So we decided to create our own, using only 
-                  the finest natural ingredients and time-honored techniques.
+                 As a women-led startup, our passion lies in blending design,
+fragrance, and mindful living. Thoughtfully made, our
+candles embody elegance and intention, making them the
+perfect gift for festivals, birthdays, baby showers,
+weddings, and life’s special milestones, a Fragratiing flare
+candle transforms the occasion into something
+unforgettable.
                 </p>
                 <p>
                   Today, each candle is still hand-poured with the same care and attention to detail 

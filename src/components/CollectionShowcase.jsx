@@ -53,7 +53,7 @@ const CollectionShowcase = memo(() => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          // viewport={{ once: true }}
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Collections</h2>
