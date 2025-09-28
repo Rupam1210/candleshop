@@ -273,9 +273,7 @@ const Products = memo(() => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-50"
     >
-      {loading ? (
-        <LoadingSpinner text="Loading products..." size="large" />
-      ) : (
+      
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <motion.div
@@ -437,17 +435,25 @@ const Products = memo(() => {
                 : "space-y-6"
             }`}
           >
-            {filteredProducts.map((product) => (
+            {/* loading */}
+            {loading ? (
+              
+        <LoadingSpinner text="Loading products..." size="large" />
+        
+      ) : (
+            filteredProducts.map((product) => (
               <motion.div
                 key={product._id || product.id}
                 variants={itemVariants}
               >
                 <ProductCard product={product} onUpdate={handleProductUpdate} />
               </motion.div>
-            ))}
-          </motion.div>
+            )))}
 
-          {filteredProducts.length === 0 && (
+          </motion.div>
+          
+
+          {!loading && filteredProducts.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -469,13 +475,13 @@ const Products = memo(() => {
             </motion.div>
           )}
         </div>
-      )}
-      <Pagination
+      
+     { !loading&&<Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
         filter={filteredProducts}
-      />
+      />}
     </motion.div>
   );
 });

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+// import { useCart } from '../context/CartContext';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,7 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const { login, isLoading } = useAuth();
+  // const {transferGuestCartToUser}=useCart();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -47,6 +49,8 @@ const Login = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
+         
+        // await transferGuestCartToUser();
         navigate('/');
       } else {
         setErrors({ submit: result.error || 'Login failed' });

@@ -8,6 +8,7 @@ import Testimonials from '../components/Testimonials';
 import Newsletter from '../components/Newsletter';
 
 const Home = () => {
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}

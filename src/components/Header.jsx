@@ -99,8 +99,12 @@ const Header = () => {
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              {/* Search */}
-              <div className="relative">
+               
+              
+
+              {/* 
+              
+<div className="relative">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -110,7 +114,8 @@ const Header = () => {
                   <Search className="h-5 w-5" />
                 </motion.button>
                 
-                <AnimatePresence>
+
+             {/* <AnimatePresence>
                   {showSearch && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -130,16 +135,16 @@ const Header = () => {
                       </form>
                     </motion.div>
                   )}
-                </AnimatePresence>
-              </div>
+                </AnimatePresence> */}
+              {/* </div>
 
-              {/* <motion.button 
+              <motion.button 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="text-gray-700 hover:text-amber-900 transition-colors"
               >
                 <Heart className="h-5 w-5" />
-              </motion.button> */}
+              </motion.button> */}  
               
               {/* Cart */}
               <motion.button

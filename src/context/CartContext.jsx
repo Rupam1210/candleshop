@@ -200,6 +200,57 @@ useEffect(() => {
 
     //
   };
+
+  // add gust item 
+  const transferGuestCartToUser = async () => {
+  try {
+    // Get guest cart from localStorage
+    console.log("first")
+    const guestCartData = localStorage.getItem('cart_guest');
+    
+    if (!guestCartData) {
+      console.log('No guest cart found');
+      return;
+    }
+
+    const guestCart = JSON.parse(guestCartData);
+    
+    if (!guestCart.items || guestCart.items.length === 0) {
+      console.log('Guest cart is empty');
+      localStorage.removeItem('cart_guest'); // Clean up empty cart
+      return;
+    }
+
+    console.log('Transferring guest cart items:', guestCart.items.length);
+    
+    // Add each item from guest cart to user cart via API
+    for (const item of guestCart.items) {
+      try {
+        await cartAPI.addItem({
+          productId: item.product._id,
+          quantity: item.quantity,
+          color: item.color,
+          scent: item.scent
+        });
+        console.log('Transferred item:', item.product.name);
+      } catch (error) {
+        console.error('Failed to transfer item:', item.product.name, error);
+        // Continue with other items even if one fails
+      }
+    }
+
+    // Clear guest cart from localStorage after successful transfer
+    localStorage.removeItem('cart_guest');
+    console.log('Guest cart transferred successfully and cleared from localStorage');
+
+    // Refresh user cart to show updated items
+    await loadcart();
+    
+  } catch (error) {
+    console.error('Error transferring guest cart:', error);
+    // Don't remove guest cart if transfer failed
+  }
+};
   // remove from guescart
   const removeFromGuestCart = (id) => {
   setItems(prev => {
@@ -280,7 +331,9 @@ useEffect(() => {
         updateGuestCartQuantity,
         clearCart,
        loadGuestCart,
-        addToGuestCart
+        addToGuestCart,
+    transferGuestCartToUser   
+
       }}
     >
       {children}

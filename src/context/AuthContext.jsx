@@ -3,6 +3,7 @@ import { authAPI } from '../services/api';
 import { showSuccess } from '../utils/toast';
  
  
+ 
 
 const AuthContext = createContext(undefined);
 
@@ -17,6 +18,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  // const {transferGuestCartToUser}=useCart();
    
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.getProfile();
       setUser(response.data.user);
     } catch (error) {
-      console.error('Failed to load user:', error);
+      // console.error('Failed to load user:', error);
       localStorage.removeItem('token');
     } finally {
       setIsLoading(false);
@@ -62,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.register(name, email, password);
       const { user, token } = response.data;
+      if(user)
       
       localStorage.setItem('token', token);
       setUser(user);
