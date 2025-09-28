@@ -193,7 +193,7 @@ router.delete('/', async (req, res) => {
         message: 'Cart not found'
       });
     }
- 
+  
     await cart.clearCart();
 
     res.json({

@@ -82,7 +82,11 @@ router.get('/', [
 
     // Search functionality
     if (req.query.search) {
-      query.$text = { $search: req.query.search };
+        query.name = { 
+    $regex: req.query.search, 
+    $options: 'i'  // 'i' for case insensitive
+  };
+ 
     }
 
     // Sort options

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, memo, useCallback } from "react";
+import React, { useState, useMemo, useEffect, memo, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Filter, Search, Grid, List } from "lucide-react";
 import { productsAPI } from "../services/api";
@@ -75,7 +75,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     }
 
     // Show 2 pages before and after current
-    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+    for (
+      let i = Math.max(1, currentPage - 2);
+      i <= Math.min(totalPages, currentPage + 2);
+      i++
+    ) {
       pages.push(i);
     }
 
@@ -107,7 +111,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         {/* Page Numbers */}
         {pages.map((page, index) =>
           page === "..." ? (
-            <span key={index} className="px-3 py-1">...</span>
+            <span key={index} className="px-3 py-1">
+              ...
+            </span>
           ) : (
             <button
               key={page}
@@ -125,7 +131,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
         {/* Next */}
         <button
-          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+          onClick={() =>
+            currentPage < totalPages && onPageChange(currentPage + 1)
+          }
           className={`px-3 py-1 rounded-full border ${
             currentPage === totalPages
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -147,50 +155,112 @@ const Products = memo(() => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
-  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [viewMode, setViewMode] = useState("grid");
   // const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const { loadProducts } = useProducts();
-  
+   const latestQuery = useRef("");
+
   const [searchParams, setSearchParams] = useSearchParams();
- 
 
   // Read current page from URL
   const currentPage = parseInt(searchParams.get("page")) || 1;
   // Update URL when currentPage changes
-   const handlePageChange = (page) => {
+  const handlePageChange = (page) => {
     if (page !== currentPage) {
       setSearchParams({ page: page.toString() });
     }
   };
 
-// useEffect(() => {
-//   window.scrollTo(0, 0);
-// }, []);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
   useEffect(() => {
     loadProduct();
     loadProducts({ page: currentPage, limit: 16 });
   }, [currentPage]);
 
+  // const loadProduct = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await productsAPI.getAll({
+  //       page: currentPage,
+  //       limit: 16,
+  //     });
+  //     // console.log(response.data);
+  //     setProducts(response.data.products);
+  //     setTotalPages(response.data.pagination.totalPages);
+  //     setTotalProducts(response.data.pagination.totalProducts);
+  //   } catch (error) {
+  //     showError("Failed to load products");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const loadProduct = async () => {
     setLoading(true);
     try {
-      const response = await productsAPI.getAll({
+      // Build params directly from state
+      const params = {
         page: currentPage,
         limit: 16,
+        search: searchTerm,
+        sort: sortBy, // ✅ Use 'sort' instead of 'sortBy' for backend
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+      };
+
+      // Remove empty search term to avoid sending empty parameter
+      Object.keys(params).forEach((key) => {
+        if (
+          params[key] === "" ||
+          params[key] === null ||
+          params[key] === undefined
+        ) {
+          delete params[key];
+        }
       });
-      // console.log(response.data);
+
+      const response = await productsAPI.getAll(params);
+      // console.log(response);
+
       setProducts(response.data.products);
       setTotalPages(response.data.pagination.totalPages);
       setTotalProducts(response.data.pagination.totalProducts);
     } catch (error) {
-      showError("Failed to load products");
+      // showError("Failed to load products");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+     latestQuery.current = searchTerm;
+
+    const handler = setTimeout(async () => {
+      setLoading(true);
+      try {
+      // 🔥 your API call
+        if (latestQuery.current === searchTerm) {
+          await loadProduct(); // ✅ update only if still latest query
+        }
+      } finally {
+        setLoading(false);
+      }
+    }, 500); // ⏳ debounce delay
+
+    return () => clearTimeout(handler); 
+
+     
+  }, [ sortBy,priceRange, searchTerm]);
+  //  useEffect(() => {
+  //   loadProduct();
+     
+  // }, [sortBy,priceRange]);
+
+
 
   const handleProductUpdate = useCallback((updatedProduct) => {
     setProducts((prev) =>
@@ -200,11 +270,11 @@ const Products = memo(() => {
     );
   }, []);
 
-  const categories = [
-    "All",
-    ...new Set(products.map((product) => product.category)),
-  ];
-  
+  // const categories = [
+  //   "All",
+  //   ...new Set(products.map((product) => product.category)),
+  // ];
+
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
@@ -252,6 +322,7 @@ const Products = memo(() => {
     return filtered;
   }, [products, selectedCategory, searchTerm, sortBy, priceRange]);
 
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -273,99 +344,126 @@ const Products = memo(() => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-50"
     >
-      
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              All Products
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover our complete collection of handcrafted candles, each one
-              designed to create the perfect ambiance for any moment.
-            </p>
-          </motion.div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            All Products
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Discover our complete collection of handcrafted candles, each one
+            designed to create the perfect ambiance for any moment.
+          </p>
+        </motion.div>
 
-          {/* Search and Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 space-y-4"
-          >
-            {/* Search Bar */}
-            <div className="max-w-md mx-auto">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search candles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
-                />
-              </div>
+        {/* Search and Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 space-y-4"
+        >
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto">
+            <div className="relative">
+               <Search  
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search candles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+              />
+             
             </div>
+          </div>
 
-            {/* Filter Controls */}
-            <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-smflex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 p-4 rounded-lg gap-3">
-              <div className="flex items-center space-x-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {filteredProducts.length} Products
-                </h3>
-                {/* <button
+          {/* Filter Controls */}
+          <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-smflex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 p-4 rounded-lg gap-3">
+            <div className="flex items-center space-x-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {!loading && products.length} Products
+              </h3>
+              {/* <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="md:hidden flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50"
                 >
                   <Filter className="h-4 w-4" />
                   <span>Filters</span>
                 </button> */}
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* View Mode Toggle */}
-                <div className="flex items-center border border-gray-300 rounded-lg">
-                  <button
-                    onClick={() => setViewMode("grid")}
-                    className={`p-2 ${
-                      viewMode === "grid"
-                        ? "bg-amber-700 text-white"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    <Grid className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`p-2 ${
-                      viewMode === "list"
-                        ? "bg-amber-700 text-white"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    <List className="h-4 w-4" />
-                  </button>
+                <div>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Price Range
+                </h4>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    value={priceRange[1]}
+                    onChange={(e) =>
+                      setPriceRange([priceRange[0], parseInt(e.target.value)])
+                    }
+                    className="flex-1"
+                  />
+                  <span className="text-sm text-gray-600 min-w-[80px]">
+                    ₹{priceRange[0]} - ₹{priceRange[1]}
+                  </span>
                 </div>
-
-                {/* Sort Dropdown */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
-                >
-                  <option value="name">Sort by Name</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="featured">Featured First</option>
-                </select>
               </div>
             </div>
 
-            {/* Filters Panel */}
-            {/* <motion.div
+            <div className="flex items-center space-x-4">
+              {/* View Mode Toggle */}
+              <div className="flex items-center border border-gray-300 rounded-lg">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-2 ${
+                    viewMode === "grid"
+                      ? "bg-amber-700 text-white"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <Grid className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-2 ${
+                    viewMode === "list"
+                      ? "bg-amber-700 text-white"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+              
+
+              {/* Sort Dropdown */}
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+              >
+                {/* <option value="name">Sort by Name</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="featured">Featured First</option> */}
+                <option value="name">Name A-Z</option>
+
+                <option value="price">Price Low to High</option>
+                <option value="-price">Price High to Low</option>
+                <option value="-createdAt">Newest First</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Filters Panel */}
+          {/* <motion.div
               initial={false}
               animate={{
                 height: showFilters ? "auto" : 0,
@@ -376,7 +474,7 @@ const Products = memo(() => {
               } md:block bg-white p-6 rounded-lg shadow-sm space-y-6`}
             >
               {/* Category Filters */}
-              {/* <div>
+          {/* <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Categories</h4>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
@@ -397,8 +495,8 @@ const Products = memo(() => {
                 </div>
               </div> */}
 
-              {/* Price Range */}
-              {/* <div>
+          {/* Price Range */}
+          {/* <div>
                 <h4 className="font-semibold text-gray-900 mb-3">
                   Price Range
                 </h4>
@@ -420,68 +518,65 @@ const Products = memo(() => {
               </div> 
                 </motion.div>
               */}
-             
+        </motion.div>
 
-          </motion.div>
-
-          {/* Product Grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className={`${
-              viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                : "space-y-6"
-            }`}
-          >
-            {/* loading */}
-            {loading ? (
-              
-        <LoadingSpinner text="Loading products..." size="large" />
-        
-      ) : (
-            filteredProducts.map((product) => (
+        {/* Product Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className={`${
+            viewMode === "grid"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+              : "space-y-6"
+          }`}
+        >
+          {/* loading */}
+          {loading ? (
+            <LoadingSpinner text="Loading products..." size="large" />
+          ) : (
+            products.map((product) => (
               <motion.div
                 key={product._id || product.id}
                 variants={itemVariants}
               >
                 <ProductCard product={product} onUpdate={handleProductUpdate} />
               </motion.div>
-            )))}
-
-          </motion.div>
-          
-
-          {!loading && filteredProducts.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <p className="text-gray-500 text-lg mb-4">
-                No products found matching your criteria.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategory("All");
-                  setPriceRange([0, 100]);
-                }}
-                className="text-amber-600 hover:text-amber-700 font-medium"
-              >
-                Clear all filters
-              </button>
-            </motion.div>
+            ))
           )}
-        </div>
-      
-     { !loading&&<Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        filter={filteredProducts}
-      />}
+        </motion.div>
+
+        {!loading && filteredProducts.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
+          >
+            <p className="text-gray-500 text-lg mb-4">
+              No products found matching your criteria.
+            </p>
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("All");
+                setPriceRange([0, 100]);
+              }}
+              className="text-amber-600 hover:text-amber-700 font-medium"
+            >
+              Clear all filters
+            </button>
+          </motion.div>
+        )}
+      </div>
+
+      {!loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          filter={filteredProducts}
+        />
+      )}
     </motion.div>
   );
 });
