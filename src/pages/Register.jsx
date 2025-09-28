@@ -62,9 +62,15 @@ const Register = () => {
       const result = await register(formData.name, formData.email, formData.password);
       if (result.success) {
         // await transferGuestCartToUser();
+        setFormData({
+           name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+        })
         navigate('/');
       } else {
-        setErrors({ submit: result.error || 'Registration failed' });
+        setErrors( 'Registration failed' );
       }
     } catch (error) {
       setErrors({ submit: 'An unexpected error occurred' });

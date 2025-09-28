@@ -162,6 +162,7 @@ const Products = memo(() => {
   const [totalProducts, setTotalProducts] = useState(0);
   const { loadProducts } = useProducts();
    const latestQuery = useRef("");
+   
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -171,6 +172,7 @@ const Products = memo(() => {
   const handlePageChange = (page) => {
     if (page !== currentPage) {
       setSearchParams({ page: page.toString() });
+      
     }
   };
 
@@ -238,6 +240,7 @@ const Products = memo(() => {
 
   useEffect(() => {
      latestQuery.current = searchTerm;
+        
 
     const handler = setTimeout(async () => {
       setLoading(true);
@@ -246,7 +249,10 @@ const Products = memo(() => {
         if (latestQuery.current === searchTerm) {
           await loadProduct(); // ✅ update only if still latest query
         }
-      } finally {
+      } catch{
+        setSearchTerm("");
+      }
+      finally {
         setLoading(false);
       }
     }, 500); // ⏳ debounce delay
@@ -546,7 +552,7 @@ const Products = memo(() => {
           )}
         </motion.div>
 
-        {!loading && filteredProducts.length === 0 && (
+        {!loading && products.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -559,7 +565,7 @@ const Products = memo(() => {
               onClick={() => {
                 setSearchTerm("");
                 setSelectedCategory("All");
-                setPriceRange([0, 100]);
+                setPriceRange([0, 1000]);
               }}
               className="text-amber-600 hover:text-amber-700 font-medium"
             >

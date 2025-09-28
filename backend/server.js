@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 
 // Load environment variables
 dotenv.config();
+const cookieParser= require('cookie-parser');
+
+
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -28,6 +31,7 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 

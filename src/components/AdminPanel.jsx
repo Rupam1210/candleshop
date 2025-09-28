@@ -40,7 +40,7 @@ const AdminPanel = ({ isOpen, onClose }) => {
       
       setStats({ totalUsers, activeUsers, adminUsers });
     } catch (error) {
-      showError('Failed to load users');
+      // showError('Failed to load users');
     } finally {
       setLoading(false);
     }

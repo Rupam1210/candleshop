@@ -10,6 +10,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+    withCredentials: true
 });
 
 // Request interceptor to add auth token
@@ -31,7 +32,7 @@ api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const message = error.response?.data?.message || 'Something went wrong';
-    showError(message);
+    // showError(message);
     return Promise.reject(error);
   }
 );
@@ -80,7 +81,10 @@ export const authAPI = {
 
   updateProfile: async (userData) => {
     return await api.put('/auth/profile', userData);
-  }
+  },
+   logout: async () => {
+    return await api.post('/auth/logout');
+  },
 };
 
 // Products API

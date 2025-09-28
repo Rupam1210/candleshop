@@ -52,6 +52,12 @@ router.post('/register', [
 
     // Generate token
     const token = generateToken(user._id);
+    res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // only send over HTTPS in prod
+    sameSite: "strict",
+    maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
+    })
 
     res.status(201).json({
       success: true,
@@ -132,6 +138,12 @@ router.post('/login', [
 
     // Generate token
     const token = generateToken(user._id);
+     res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // only send over HTTPS in prod
+    sameSite: "strict",
+    maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
+  });
 
     res.json({
       success: true,
@@ -143,7 +155,7 @@ router.post('/login', [
           email: user.email,
           role: user.role
         },
-        token
+        // token
       }
     });
   } catch (error) {
@@ -182,10 +194,17 @@ router.get('/me', protect, async (req, res) => {
     });
   }
 });
+//logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
+});
+
 
 // @desc    Update user profile
 // @route   PUT /api/auth/profile
 // @access  Private
+
 router.put('/profile', protect, [
   body('name')
     .optional()

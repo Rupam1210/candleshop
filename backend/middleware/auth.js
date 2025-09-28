@@ -4,12 +4,13 @@ const User = require('../models/User');
 // Protect routes - require authentication
 const protect = async (req, res, next) => {
   try {
-    let token;
+    // let token;  
+     const token = req.cookies.token;
 
     // Check for token in headers
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
+    // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    //   token = req.headers.authorization.split(' ')[1];
+    // }
 
     if (!token) {
       return res.status(401).json({
@@ -64,7 +65,7 @@ const admin = (req, res, next) => {
 // Generate JWT token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d'
+    expiresIn: '2d'
   });
 };
 

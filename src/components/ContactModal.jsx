@@ -22,7 +22,8 @@ const ContactModal = ({ isOpen, onClose }) => {
       const response = await contactAPI.getAll();
       setContacts(response.data.contacts);
     } catch (error) {
-      showError('Failed to load contact messages');
+      
+      // showError('Failed to load contact messages');
     } finally {
       setLoading(false);
     }

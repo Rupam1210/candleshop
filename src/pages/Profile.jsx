@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Save, Eye, EyeOff } from "lucide-react";
 // import { useAuth } from '../hooks/useAuth';
@@ -20,6 +20,12 @@ const Profile = memo(() => {
     name: user?.name || "",
     email: user?.email || "",
   });
+  useEffect(()=>{
+    setProfileData({
+      name: user?.name || "",
+    email: user?.email || "",
+    })
+  },[user])
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",

@@ -23,12 +23,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check for stored token and get user data
-    const token = localStorage.getItem('token');
-    if (token) {
+    
       loadUser();
-    } else {
-      setIsLoading(false);
-    }
+    
   }, []);
 
   const loadUser = async () => {
@@ -48,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.login(email, password);
       const { user, token } = response.data;
       
-      localStorage.setItem('token', token);
+      //localStorage.setItem('token', token);
       setUser(user);
       showSuccess("Login successfully")
       setIsLoading(false);
@@ -64,11 +61,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.register(name, email, password);
       const { user, token } = response.data;
-      if(user)
+      if(user){
       
-      localStorage.setItem('token', token);
+      // localStorage.setItem('token', token);
       setUser(user);
-      setIsLoading(false);
+      setIsLoading(false);}
       return { success: true, user };
     } catch (error) {
       setIsLoading(false);
@@ -76,17 +73,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async() => {
+    await authAPI.logout();
     setUser(null);
      
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
 
     
   };
 
-  const updateProfile = (userData) => {
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
+  const updateProfile = async(userData) => {
+    try {
+      const res=await authAPI.updateProfile(userData);
+      // console.log(res)
+      setUser(res.data.user)
+    } catch (error) {
+      throw error
+    }
+    // const updatedUser = { ...user, ...userData };
+    // setUser(updatedUser);
   };
 
   return (
