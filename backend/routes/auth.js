@@ -55,7 +55,7 @@ router.post('/register', [
     res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // only send over HTTPS in prod
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
     })
 
@@ -138,10 +138,14 @@ router.post('/login', [
 
     // Generate token
     const token = generateToken(user._id);
+
+    // Save in DB (session store)
+  // await Session.create({ userId: user._id, token });
+
      res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // only send over HTTPS in prod
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
   });
 
@@ -195,7 +199,9 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 //logout
-router.post("/logout", (req, res) => {
+router.post("/logout", async(req, res) => {
+  //  const token = req.cookies.token;
+  // await Session.deleteOne({ token });
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
 });
