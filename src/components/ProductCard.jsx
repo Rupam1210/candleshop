@@ -76,6 +76,7 @@ const ProductCard = ({ product, onUpdate }) => {
               }
               alt={product.name}
               className="w-full h-full object-cover"
+              loading={'lazy'}
               animate={{ scale: isHovered ? 1.05 : 1 }}
               transition={{ duration: 0.4 }}
             />

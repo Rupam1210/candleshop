@@ -174,6 +174,7 @@ const Products = memo(() => {
       setSearchParams({ page: page.toString() });
       
     }
+     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // useEffect(() => {
@@ -246,6 +247,7 @@ const Products = memo(() => {
       setLoading(true);
       try {
       // 🔥 your API call
+      
         if (latestQuery.current === searchTerm) {
           await loadProduct(); // ✅ update only if still latest query
         }
@@ -392,7 +394,7 @@ const Products = memo(() => {
           <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-smflex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 p-4 rounded-lg gap-3">
             <div className="flex items-center space-x-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                {!loading && products.length} Products
+                {!loading && totalProducts} Products
               </h3>
               {/* <button
                   onClick={() => setShowFilters(!showFilters)}
@@ -525,6 +527,14 @@ const Products = memo(() => {
                 </motion.div>
               */}
         </motion.div>
+        {!loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          filter={filteredProducts}
+        />
+      )}
 
         {/* Product Grid */}
         <motion.div
