@@ -168,7 +168,7 @@ const CollectionDetail = () => {
             
             <div className="flex items-center space-x-4">
               {/* View Mode Toggle */}
-              <div className="flex items-center border border-gray-300 rounded-lg bg-white">
+              {/* <div className="flex items-center border border-gray-300 rounded-lg bg-white">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 ${viewMode === 'grid' ? 'bg-amber-700 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
@@ -181,7 +181,7 @@ const CollectionDetail = () => {
                 >
                   <List className="h-4 w-4" />
                 </button>
-              </div>
+              </div> */}
 
               {/* Sort Dropdown */}
               <select

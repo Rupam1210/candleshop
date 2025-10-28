@@ -434,7 +434,7 @@ const Products = memo(() => {
 
             <div className="flex items-center space-x-4">
               {/* View Mode Toggle */}
-              <div className="flex items-center border border-gray-300 rounded-lg">
+              {/* <div className="flex items-center border border-gray-300 rounded-lg">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 ${
@@ -455,7 +455,7 @@ const Products = memo(() => {
                 >
                   <List className="h-4 w-4" />
                 </button>
-              </div>
+              </div> */}
               
 
               {/* Sort Dropdown */}
