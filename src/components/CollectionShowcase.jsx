@@ -31,7 +31,13 @@ const CollectionShowcase = memo(() => {
   if (loading) {
     return <LoadingSpinner text="Loading collections..." />;
   }
-
+ const optimizeImage = (url, width = 400, height = 400) => {
+  return url.replace(
+    '/upload/',
+    `/upload/f_auto,q_auto,w_${width},h_${height},c_fill/`
+  );
+};
+// console.log(collections)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -77,7 +83,7 @@ const CollectionShowcase = memo(() => {
             >
               <div className={`aspect-video ${index === 0 ? 'md:aspect-[2/1]' : ''} relative`}>
                 <img
-                  src={collection.image?.url || collection.image}
+                  src={ optimizeImage(collection.image, 400, 400) || collection.image?.url}
                   alt={collection.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   onError={(e) => {

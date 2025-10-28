@@ -21,6 +21,14 @@ const ProductCard = ({ product, onUpdate }) => {
 // const scentOptions = product.scent
 //   ? product.scent.split(",").map((s) => s.trim())
 //   : [];
+  // console.log(product)
+  const optimizeImage = (url, width = 400, height = 400) => {
+  return url.replace(
+    '/upload/',
+    `/upload/f_auto,q_auto,w_${width},h_${height},c_fill/`
+  );
+};
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -70,10 +78,12 @@ const ProductCard = ({ product, onUpdate }) => {
           <div className="relative aspect-square overflow-hidden">
             <motion.img
               src={
-                product.images?.[0]?.url ||
+                optimizeImage(product?.images[0]?.url, 400, 400)
+                 ||
                 product.images?.[0] ||
                 "https://via.placeholder.com/400x400/f0f0f0/333333?text=No+Image"
               }
+              
               alt={product.name}
               className="w-full h-full object-cover"
               loading={'lazy'}
@@ -196,13 +206,13 @@ const ProductCard = ({ product, onUpdate }) => {
 
           <div className="p-6 space-y-4">
             <div>
-              <p className="text-sm text-amber-600 font-medium">
+              <p className="text-sm text-amber-600 font-medium line-clamp-1">
                 {product.category}
               </p>
-              <h3 className="text-lg font-semibold text-gray-900 mt-1 group-hover:text-amber-700 transition-colors">
+              <h3 className="text-lg font-semibold text-gray-900 mt-1 group-hover:text-amber-700 transition-colors line-clamp-1">
                 {product.name}
               </h3>
-              <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+              <p className="text-sm text-gray-600 mt-2 line-clamp-1">
                 {product.description}
               </p>
             </div>
@@ -223,10 +233,10 @@ const ProductCard = ({ product, onUpdate }) => {
               </div>
 
               <div className="text-xs text-gray-500 space-y-1">
-                <div>
+                <div className="line-clamp-1">
                   <strong>Available Scent:</strong> {product.scent}
                 </div>
-                <div>
+                <div className="line-clamp-1">
                   <strong>Size:</strong> {product.size}
                 </div>
               </div>

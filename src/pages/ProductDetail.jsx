@@ -206,6 +206,7 @@ setIsAdd(true);
       (prev) => (prev - 1 + product.images.length) % product.images.length
     );
   };
+  
 
   return (
     <motion.div

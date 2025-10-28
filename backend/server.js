@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 // Load environment variables
 dotenv.config();
 const cookieParser= require('cookie-parser');
-const  compression =require( 'compression');
+const  compression =require( 'compression'); 
 
 
 

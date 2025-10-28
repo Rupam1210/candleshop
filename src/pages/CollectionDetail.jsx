@@ -92,7 +92,12 @@ const CollectionDetail = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
-
+//   const optimizeImage = (url, width = 400, height = 400) => {
+//   return url.replace(
+//     '/upload/',
+//     `/upload/f_auto,q_auto,w_${width},h_${height},c_fill/`
+//   );
+// };
   return (
     <motion.div
       initial={{ opacity: 0 }}
