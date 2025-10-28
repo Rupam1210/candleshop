@@ -63,10 +63,7 @@ const CollectionShowcase = memo(() => {
         </motion.div>
 
         <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {collections?.map((collection, index) => (
@@ -91,10 +88,7 @@ const CollectionShowcase = memo(() => {
                 
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <motion.h3 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
+                    
                     className="text-2xl md:text-3xl font-bold text-white mb-3"
                   >
                     {collection.name}
@@ -109,12 +103,7 @@ const CollectionShowcase = memo(() => {
                     {collection.description}
                   </motion.p> */}
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    
                   >
                     <Link
                       to={`/collections/${collection._id}`}

@@ -157,7 +157,7 @@ const Products = memo(() => {
   const [sortBy, setSortBy] = useState("name");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [viewMode, setViewMode] = useState("grid");
-  // const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const { loadProducts } = useProducts();
@@ -167,13 +167,19 @@ const Products = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Read current page from URL
-  const currentPage = parseInt(searchParams.get("page")) || 1;
+ 
+  useEffect(()=>{
+     const Page = parseInt(searchParams.get("page")) || 1;
+     setCurrentPage(Page)
+  },[])
   // Update URL when currentPage changes
   const handlePageChange = (page) => {
     if (page !== currentPage) {
       setSearchParams({ page: page.toString() });
       
     }
+    setCurrentPage(page)
+    
      window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -241,8 +247,9 @@ const Products = memo(() => {
 
   useEffect(() => {
      latestQuery.current = searchTerm;
+    //  handlePageChange(1);
         
-
+// setCurrentPage(1)
     const handler = setTimeout(async () => {
       setLoading(true);
       try {

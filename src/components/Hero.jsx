@@ -95,22 +95,31 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex   items-center justify-center  flex-col space-y-2 sm:flex-row gap-4"
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className='hidden'>
                 <Link 
                   to="/products"
-                  className="bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center group"
+                  className="  bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center group"
                 >
                   Shop Collection
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className=" h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
+               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link 
+                  to="/products"
+                  className="  bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-800 transition-colors flex items-center justify-center group"
+                >
+                  Shop Collection
+                  <ArrowRight className=" h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link 
                   to="/collections"
-                  className="border-2 border-amber-700 text-amber-700 px-8 py-4 rounded-lg font-semibold hover:bg-amber-700 hover:text-white transition-colors"
+                  className=" border-2 border-amber-700  text-amber-700 px-8 py-4 rounded-lg font-semibold hover:bg-amber-700 hover:text-white transition-colors   "
                 >
                   Explore Collections
                 </Link>
